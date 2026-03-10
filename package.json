@@ -1,0 +1,19 @@
+{
+  "name": "atlas-launcher",
+  "version": "1.0.0",
+  "description": "The official source code for atlas launcher",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FracturedSora/Atlas-Launcher.git"
+  },
+  "author": "FracturedSora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FracturedSora/Atlas-Launcher/issues"
+  },
+  "homepage": "https://github.com/FracturedSora/Atlas-Launcher#readme"
+}
