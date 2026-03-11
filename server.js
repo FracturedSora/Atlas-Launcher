@@ -2,7 +2,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const Fastify = require("fastify");
-
+const autoLoad = require("@fastify/autoload");
 require("dotenv").config();
 
 // Variables
@@ -74,6 +74,13 @@ const createLauncherWindow = () => {
   launcherWindow.loadFile("src/views/home.html");
   launcherWindow.show();
 };
+
+fastify.register(autoLoad, {
+  dir: path.join(__dirname, "src", "api"),
+  options: {
+    prefix: "/api/v1",
+  },
+});
 
 app.whenReady().then(async () => {
   try {
