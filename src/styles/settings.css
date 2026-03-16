@@ -1,0 +1,832 @@
+/* The Actual App Container */
+.app-container {
+    flex: 1;
+    margin: 20px; /* Gives it space from the screen edge */
+    background: #0d0d0f;
+    border-radius: 24px; /* Round corners for the app */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden; /* Important: Clips the internal layout to the rounded corners */
+    display: flex;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+/* Sidebar Divider */
+.nav-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 15px 20px 15px;
+    border-radius: 1px;
+}
+/* Layout Adjustment */
+.seanime-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+/* ===== TOP NAVIGATION STYLES ===== */
+.settings-top-nav {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(
+        180deg,
+        rgba(255, 157, 0, 0.02) 0%,
+        transparent 100%
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.nav-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.nav-tab-btn.active {
+    background: rgba(255, 157, 0, 0.15);
+    border-color: rgba(255, 157, 0, 0.3);
+    color: #ff9d00;
+}
+
+.nav-tab-btn .tab-icon {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-tab-btn .tab-label {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-tab-btn:hover .tab-label,
+.nav-tab-btn.active .tab-label {
+    max-width: 200px;
+    opacity: 1;
+}
+
+/* Content Panel */
+.settings-panel-modern {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #efefef;
+}
+/* Modern Card Style */
+.settings-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    transition: border 0.3s ease;
+}
+.settings-card:hover {
+    border-color: rgba(255, 157, 0, 0.3);
+}
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+.settings-text .label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.settings-text .description {
+    font-size: 0.85rem;
+    color: #666;
+}
+/* Seanime Switch (Orange Accent) */
+.switch {
+    position: relative;
+    width: 44px;
+    height: 22px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #2a2a2d;
+    transition: 0.3s;
+    border-radius: 34px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: #eee;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #ff9d00;
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+.connect-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+.discord {
+    background: #5865f2; /* Discord Brand Color */
+    color: white;
+}
+.discord:hover {
+    background: #4752c4;
+}
+.discord.connected {
+    background: #ed4245; /* Red for Disconnect */
+}
+.btn-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* ===== CONNECTION CARD STYLES ===== */
+.settings-section {
+    transition: opacity 0.3s ease;
+}
+
+.settings-section.hidden {
+    display: none;
+}
+
+.connection-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.connection-card:hover {
+    border-color: rgba(255, 157, 0, 0.3);
+    background: rgba(255, 157, 0, 0.03);
+}
+
+.connection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.connection-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+}
+
+.connection-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #0055ff 0%, #0099ff 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0, 85, 255, 0.3);
+}
+
+.connection-logo svg {
+    width: 36px;
+    height: 36px;
+}
+
+.connection-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.connection-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #efefef;
+    margin: 0;
+}
+
+.connection-desc {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+.btn-connect {
+    padding: 10px 24px;
+    border: 1px solid rgba(255, 157, 0, 0.5);
+    background: rgba(255, 157, 0, 0.1);
+    color: #ff9d00;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-connect:hover {
+    background: rgba(255, 157, 0, 0.2);
+    border-color: rgba(255, 157, 0, 0.8);
+    box-shadow: 0 0 12px rgba(255, 157, 0, 0.3);
+}
+
+.btn-connect.connected {
+    background: rgba(100, 200, 100, 0.1);
+    border-color: rgba(100, 200, 100, 0.5);
+    color: #64c864;
+}
+
+.btn-connect.connected:hover {
+    background: rgba(100, 200, 100, 0.2);
+    border-color: rgba(100, 200, 100, 0.8);
+}
+
+/* ===== OAUTH MODAL STYLES (Discord-Inspired) ===== */
+.oauth-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: oauthFadeIn 0.2s ease;
+}
+
+.oauth-modal.hidden {
+    display: none;
+}
+
+@keyframes oauthFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.oauth-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    z-index: -1;
+}
+
+.oauth-modal-content {
+    background: linear-gradient(180deg, #1a1a1e 0%, #0f0f12 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    max-width: 580px;
+    width: 90%;
+    overflow: hidden;
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.6),
+        0 0 1px rgba(255, 255, 255, 0.1) inset;
+    animation: oauthSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes oauthSlideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Header with branding */
+.oauth-header {
+    padding: 32px 32px 24px;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 157, 0, 0.05) 0%,
+        transparent 100%
+    );
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.oauth-logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.oauth-logo {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, #0055ff 0%, #0099ff 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(0, 85, 255, 0.25);
+    animation: oauthLogoPulse 0.5s ease-out;
+}
+
+@keyframes oauthLogoPulse {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.oauth-logo svg {
+    width: 32px;
+    height: 32px;
+}
+
+.oauth-close-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.2s ease;
+}
+
+.oauth-close-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #ddd;
+}
+
+.oauth-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.5px;
+}
+
+.oauth-subtitle {
+    font-size: 0.95rem;
+    color: #999;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Body content */
+.oauth-body {
+    padding: 28px 32px;
+}
+
+.oauth-app-info {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.oauth-requesting {
+    font-size: 0.85rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.oauth-account {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Permissions section */
+.oauth-permissions-section {
+    margin-bottom: 24px;
+}
+
+.permissions-header {
+    margin-bottom: 16px;
+}
+
+.permissions-header h3 {
+    font-size: 0.95rem;
+    color: #bbb;
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.permissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.permission-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background 0.2s ease;
+}
+
+.permission-item:last-child {
+    border-bottom: none;
+}
+
+.permission-item:hover {
+    background: rgba(255, 157, 0, 0.03);
+}
+
+.permission-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.permission-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.anime-icon {
+    background: linear-gradient(135deg, #ff0055, #ff6600);
+    color: white;
+}
+
+.manga-icon {
+    background: linear-gradient(135deg, #00d4ff, #0099ff);
+    color: white;
+}
+
+.stats-icon {
+    background: linear-gradient(135deg, #ff9d00, #ffb84d);
+    color: white;
+}
+
+.profile-icon {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    color: white;
+}
+
+.permission-text {
+    flex: 1;
+}
+
+.permission-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ddd;
+    margin-bottom: 2px;
+}
+
+.permission-desc {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Security notice */
+.oauth-security-notice {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    background: rgba(0, 200, 100, 0.08);
+    border: 1px solid rgba(0, 200, 100, 0.2);
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.security-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00c864;
+    flex-shrink: 0;
+}
+
+.security-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.security-text {
+    flex: 1;
+}
+
+.security-text p {
+    font-size: 0.85rem;
+    color: #88bb88;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Footer with buttons */
+.oauth-footer {
+    padding: 16px 32px 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.oauth-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.oauth-btn-cancel {
+    background: rgba(255, 255, 255, 0.05);
+    color: #999;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.oauth-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #bbb;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.oauth-btn-authorize {
+    background: linear-gradient(135deg, #0055ff 0%, #0099ff 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 85, 255, 0.3);
+    border: 1px solid rgba(0, 153, 255, 0.5);
+}
+
+.oauth-btn-authorize:hover {
+    background: linear-gradient(135deg, #0066ff 0%, #00aaff 100%);
+    box-shadow: 0 6px 20px rgba(0, 100, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+.oauth-btn-authorize:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 85, 255, 0.3);
+}
+
+/* ===== OAUTH FLOW MODAL STYLES ===== */
+.oauth-flow-modal {
+    max-width: 520px;
+}
+
+.oauth-flow-header {
+    text-align: center;
+}
+
+.oauth-flow-header .oauth-logo-container {
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 0;
+}
+
+.oauth-flow-header .oauth-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.oauth-flow-body {
+    text-align: center;
+}
+
+.oauth-flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.flow-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.flow-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 85, 255, 0.1) 0%,
+        rgba(0, 153, 255, 0.1) 100%
+    );
+    border: 2px solid rgba(0, 153, 255, 0.3);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0099ff;
+    animation: flowPulse 2s ease-in-out infinite;
+}
+
+@keyframes flowPulse {
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.flow-step h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.flow-step p {
+    font-size: 0.9rem;
+    color: #999;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.oauth-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: rgba(0, 153, 255, 0.05);
+    border: 1px solid rgba(0, 153, 255, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.info-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.info-icon {
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.info-text {
+    flex: 1;
+}
+
+.info-text p {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ddd;
+    margin: 0 0 2px 0;
+}
+
+.info-text span {
+    font-size: 0.8rem;
+    color: #777;
+    display: block;
+}
+
+.oauth-flow-footer {
+    flex-direction: row;
+    gap: 12px;
+}
+
+/* ===== BUTTON STYLES ===== */
+.modal-footer {
+    padding: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-link-account {
+    padding: 12px 28px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-link-account:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+.btn-link-account:active {
+    transform: translateY(0);
+}
+
+.btn-unlink {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border-color: rgba(220, 53, 69, 0.5) !important;
+    color: #dc3545 !important;
+}
+
+.btn-unlink:hover {
+    background: rgba(220, 53, 69, 0.2) !important;
+    border-color: rgba(220, 53, 69, 0.8) !important;
+    box-shadow: 0 0 12px rgba(220, 53, 69, 0.3) !important;
+}
