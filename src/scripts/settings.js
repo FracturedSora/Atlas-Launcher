@@ -3,7 +3,6 @@ const externalToggle = document.getElementById("externalSRCS-toggle");
 const navApps = document.getElementById("nav-apps");
 const externalDivider = document.getElementById("divider");
 
-// ─── External sidebar visibility ─────────────────────────────────────────────
 const updateExternalVisibility = (isVisible) => {
   if (navApps) {
     navApps.style.display = isVisible ? "flex" : "none";
@@ -13,7 +12,6 @@ const updateExternalVisibility = (isVisible) => {
   }
 };
 
-// ─── NSFW + external toggles init ────────────────────────────────────────────
 window.addEventListener("DOMContentLoaded", () => {
   nsfwToggle.checked = localStorage.getItem("contentType") === "nsfw";
 
@@ -31,10 +29,10 @@ if (externalToggle) {
     const isActive = externalToggle.checked;
     localStorage.setItem("showExternal", isActive);
     updateExternalVisibility(isActive);
+    location.reload();
   });
 }
 
-// ─── Tab navigation ───────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".nav-tab-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
@@ -52,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ─── AniList UI elements ──────────────────────────────────────────────────────
 const connectBtn = document.getElementById("connect-btn");
 const unlinkBtn = document.getElementById("unlink-btn");
 const oauthModal = document.getElementById("connect-modal");
@@ -61,7 +58,6 @@ const modalClose = document.getElementById("modal-close");
 const linkAccountBtn = document.getElementById("link-account-btn");
 const oauthCancel = document.getElementById("oauth-cancel");
 
-// ─── Update UI to connected state ─────────────────────────────────────────────
 function updateAniListUI(username, avatar) {
   const usernameEl = document.getElementById("anilist-username");
   const avatarImg = document.getElementById("anilist-avatar");
@@ -79,7 +75,6 @@ function updateAniListUI(username, avatar) {
   if (unlinkBtn) unlinkBtn.style.display = "inline-block";
 }
 
-// ─── Reset UI to disconnected state ──────────────────────────────────────────
 function resetAniListUI() {
   const usernameEl = document.getElementById("anilist-username");
   const avatarImg = document.getElementById("anilist-avatar");
@@ -94,7 +89,6 @@ function resetAniListUI() {
   if (unlinkBtn) unlinkBtn.style.display = "none";
 }
 
-// ─── Load from SQLite via API on page load ────────────────────────────────────
 window.addEventListener("DOMContentLoaded", async () => {
   try {
     const res = await fetch("http://localhost:3000/api/v1/anilist/me");
@@ -114,7 +108,6 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-// ─── On load: if redirected back after OAuth, switch to connections tab ─────
 window.addEventListener("DOMContentLoaded", () => {
   if (sessionStorage.getItem("goToConnections") === "true") {
     sessionStorage.removeItem("goToConnections");
@@ -133,7 +126,6 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ─── Unlink ───────────────────────────────────────────────────────────────────
 async function unlinkAniListAccount() {
   try {
     const res = await fetch("http://localhost:3000/api/v1/anilist/unlink", {
@@ -158,7 +150,6 @@ if (unlinkBtn) {
   });
 }
 
-// ─── Modal open/close ─────────────────────────────────────────────────────────
 connectBtn.addEventListener("click", () =>
   oauthModal.classList.remove("hidden"),
 );
@@ -171,13 +162,11 @@ oauthModal.addEventListener("click", (e) => {
     closeOAuthModal();
 });
 
-// ─── Authorize ────────────────────────────────────────────────────────────────
 linkAccountBtn.addEventListener("click", async () => {
   try {
     const res = await fetch("http://localhost:3000/api/v1/anilist/authorize");
     const data = await res.json();
 
-    // Set flag so after reload we jump back to connections tab
     sessionStorage.setItem("goToConnections", "true");
 
     if (window.electronAPI?.openAniListOAuth) {
@@ -188,7 +177,6 @@ linkAccountBtn.addEventListener("click", async () => {
 
     closeOAuthModal();
 
-    // Poll until the account appears in DB, then reload
     const poll = setInterval(async () => {
       try {
         const check = await fetch("http://localhost:3000/api/v1/anilist/me");
@@ -202,7 +190,6 @@ linkAccountBtn.addEventListener("click", async () => {
       } catch {}
     }, 1000);
 
-    // Stop polling after 3 minutes regardless
     setTimeout(() => clearInterval(poll), 3 * 60 * 1000);
   } catch (e) {
     console.error("OAuth error:", e);

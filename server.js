@@ -13,24 +13,36 @@ const fastify = Fastify({
 });
 
 // Launch apps
-async function launchApp({ url }) {
-  if (appWindow) {
+async function launchApp({ url, headers = {} }) {
+  if (appWindow && !appWindow.isDestroyed()) {
     appWindow.focus();
     return;
   }
 
   appWindow = new BrowserWindow({
-    width: 2020,
-    height: 1080,
+    width: 1280,
+    height: 720,
     autoHideMenuBar: true,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
-      webSecurity: false,
+      webSecurity: true,
     },
   });
 
-  appWindow.loadURL(url);
+  const ses = appWindow.webContents.session;
+
+    await ses.clearCache();
+
+    ses.webRequest.onBeforeSendHeaders((details, callback) => {
+      Object.keys(headers).forEach((key) => {
+        details.requestHeaders[key] = headers[key];
+      });
+
+      callback({ requestHeaders: details.requestHeaders });
+    });
+
+  appWindow.loadURL(url, { url });
 
   appWindow.webContents.on("did-finish-load", () => {
     BrowserWindow.getAllWindows().forEach((win) => {
@@ -41,7 +53,7 @@ async function launchApp({ url }) {
   appWindow.on("closed", () => {
     appWindow = null;
     BrowserWindow.getAllWindows().forEach((win) =>
-      win.webContents.send("status", { status: "closed", url: null }),
+      win.webContents.send("status", { status: "closed", url: null })
     );
   });
 }
@@ -51,7 +63,10 @@ ipcMain.on("open-app", (event, data) => {
     appWindow.close();
   } else {
     if (data && data.url) {
-      launchApp({ url: String(data.url) });
+      launchApp({
+        url: String(data.url),
+        headers: data.headers
+      });
     } else {
       console.log("Data missing url property");
     }
@@ -61,7 +76,7 @@ ipcMain.on("open-app", (event, data) => {
 // Create the launcher window
 const createLauncherWindow = () => {
   launcherWindow = new BrowserWindow({
-    width: 2020,
+    width: 1920,
     height: 1080,
     autoHideMenuBar: true,
     webPreferences: {
