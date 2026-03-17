@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
   launchBtn.addEventListener("click", () => {
     const currentUrl = String(launchBtn.getAttribute("data-url") || "");
     const secretKey = launchBtn.getAttribute("data-key");
+    const contentType = localStorage.getItem("contentType") || "sfw";
 
     if (!currentUrl || currentUrl === "null") {
       console.error("URL is missing from the button attribute!");
@@ -36,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       window.backendAPI.openApp({
         url: currentUrl,
-        headers: secretKey ? { "x-secret-key": secretKey } : {}
+        headers: secretKey ? { "x-secret-key": secretKey, "x-content-type": contentType} : {}
       });
     } catch (error) {
       console.error("IPC Error:", error);

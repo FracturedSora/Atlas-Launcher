@@ -32,15 +32,25 @@ async function launchApp({ url, headers = {} }) {
 
   const ses = appWindow.webContents.session;
 
-    await ses.clearCache();
+  await ses.clearCache();
 
-    ses.webRequest.onBeforeSendHeaders((details, callback) => {
-      Object.keys(headers).forEach((key) => {
-        details.requestHeaders[key] = headers[key];
-      });
-
-      callback({ requestHeaders: details.requestHeaders });
+  ses.webRequest.onBeforeSendHeaders((details, callback) => {
+    Object.keys(headers).forEach((key) => {
+      details.requestHeaders[key] = headers[key];
     });
+
+    callback({ requestHeaders: details.requestHeaders });
+  });
+
+  const contentType = headers["x-content-type"] || "sfw";
+
+  appWindow.webContents.on("did-navigate", () => {
+    const script = `
+          localStorage.setItem("contentType", "${contentType}");
+        `;
+
+    appWindow.webContents.executeJavaScript(script).catch(console.error);
+  });
 
   appWindow.loadURL(url, { url });
 
@@ -53,7 +63,7 @@ async function launchApp({ url, headers = {} }) {
   appWindow.on("closed", () => {
     appWindow = null;
     BrowserWindow.getAllWindows().forEach((win) =>
-      win.webContents.send("status", { status: "closed", url: null })
+      win.webContents.send("status", { status: "closed", url: null }),
     );
   });
 }
@@ -65,7 +75,7 @@ ipcMain.on("open-app", (event, data) => {
     if (data && data.url) {
       launchApp({
         url: String(data.url),
-        headers: data.headers
+        headers: data.headers,
       });
     } else {
       console.log("Data missing url property");

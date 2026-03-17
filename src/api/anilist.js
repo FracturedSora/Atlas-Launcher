@@ -13,7 +13,6 @@ function getDb() {
   const sqlite3 = require("sqlite3").verbose();
   fs.mkdirSync(DB_DIR, { recursive: true });
   const db = new sqlite3.Database(DB_PATH);
-  // Return a promise that resolves with db only after table is guaranteed to exist
   return new Promise((resolve, reject) => {
     db.run(
       `
@@ -36,7 +35,6 @@ function getDb() {
   });
 }
 
-// Promisify sqlite3 get/run
 function dbGet(db, sql, params = []) {
   return new Promise((resolve, reject) => {
     db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row)));
@@ -51,7 +49,6 @@ function dbRun(db, sql, params = []) {
 }
 
 module.exports = async function (fastify, opts) {
-  // ── GET /api/v1/anilist/authorize ─────────────────────────────────────────
   fastify.get("/anilist/authorize", async (req, reply) => {
     try {
       const authUrl = `https://anilist.co/api/v2/oauth/authorize?client_id=${ANILIST_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
@@ -63,7 +60,6 @@ module.exports = async function (fastify, opts) {
     }
   });
 
-  // ── GET /api/v1/anilist/callback ──────────────────────────────────────────
   fastify.get("/anilist/callback", async (req, reply) => {
     try {
       const { code } = req.query;
@@ -73,7 +69,6 @@ module.exports = async function (fastify, opts) {
           .type("text/html")
           .send(`<html><body>No code provided</body></html>`);
 
-      // Exchange code for token
       const tokenRes = await fetch("https://anilist.co/api/v2/oauth/token", {
         method: "POST",
         headers: {
@@ -97,7 +92,6 @@ module.exports = async function (fastify, opts) {
 
       const { access_token: token } = await tokenRes.json();
 
-      // Fetch user info
       const userRes = await fetch("https://graphql.anilist.co/", {
         method: "POST",
         headers: {
@@ -120,7 +114,6 @@ module.exports = async function (fastify, opts) {
       const { id: userId, name: username, avatar } = data.Viewer;
       const avatarUrl = avatar.medium;
 
-      // ── Store in SQLite ────────────────────────────────────────────────────
       const db = await getDb();
       const existing = await dbGet(
         db,
@@ -142,7 +135,6 @@ module.exports = async function (fastify, opts) {
       }
       db.close();
 
-      // ── Notify Electron windows ────────────────────────────────────────────
       const { BrowserWindow } = require("electron");
       BrowserWindow.getAllWindows().forEach((win) => {
         win.webContents.send("oauth-success", {
@@ -157,7 +149,7 @@ module.exports = async function (fastify, opts) {
         <html><head><title>Authorization Successful</title>
         <style>body{font-family:Arial;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}.container{text-align:center;background:white;padding:40px;border-radius:12px}</style>
         </head><body><div class="container">
-          <h1>✅ Authorization Successful!</h1>
+          <h1>Authorization Successful!</h1>
           <p>Welcome, ${username}!</p>
           <p>Closing in 3 seconds...</p>
         </div><script>setTimeout(()=>window.close(),3000)</script></body></html>`);
@@ -169,7 +161,6 @@ module.exports = async function (fastify, opts) {
     }
   });
 
-  // ── GET /api/v1/anilist/me ────────────────────────────────────────────────
   fastify.get("/anilist/me", async (req, reply) => {
     try {
       const db = await getDb();
@@ -191,7 +182,6 @@ module.exports = async function (fastify, opts) {
     }
   });
 
-  // ── DELETE /api/v1/anilist/unlink ─────────────────────────────────────────
   fastify.delete("/anilist/unlink", async (req, reply) => {
     try {
       const db = await getDb();
