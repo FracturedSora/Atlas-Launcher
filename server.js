@@ -27,6 +27,7 @@ async function launchApp({ url, headers = {} }) {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
+      devTools: false
     },
   });
 
@@ -93,6 +94,7 @@ const createLauncherWindow = () => {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
+      devTools: false,
     },
   });
 

@@ -27,5 +27,28 @@
   "devDependencies": {
     "electron": "^40.8.0",
     "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.atlas.launcher",
+    "productName": "Atlas Launcher",
+    "files": [
+      "**/*",
+      ".env",
+      "!dist/*",
+      "!node_modules/*"
+    ],
+    "asar": true,
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Other"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
   }
 }
