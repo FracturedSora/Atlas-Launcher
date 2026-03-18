@@ -6,9 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win",
-    "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder -wl"
+    "build": "electron-builder"
   },
   "repository": {
     "type": "git",
