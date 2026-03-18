@@ -25,6 +25,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create .env file
+        shell: bash
+        run: |
+          echo "ANILIST_CLIENT_ID=${{ secrets.ANILIST_CLIENT_ID }}" >> .env
+          echo "ANILIST_CLIENT_SECRET=${{ secrets.ANILIST_CLIENT_SECRET }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+
       - name: Build Electron App
         run: npm run build
         env:

@@ -34,9 +34,11 @@
     "productName": "Atlas Launcher",
     "files": [
       "**/*",
-      ".env",
       "!dist/*",
       "!node_modules/*"
+    ],
+    "extraResources": [
+      ".env"
     ],
     "asar": true,
     "win": {
