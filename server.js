@@ -3,7 +3,11 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const Fastify = require("fastify");
 const autoLoad = require("@fastify/autoload");
-require("dotenv").config();
+const envPath = isPackaged
+  ? path.join(process.resourcesPath, '.env')
+  : path.resolve(process.cwd(), '.env');
+
+require('dotenv').config({ path: envPath });
 
 // Variables
 let appWindow = null;
