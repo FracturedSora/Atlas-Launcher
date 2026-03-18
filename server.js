@@ -5,8 +5,10 @@ const Fastify = require("fastify");
 const autoLoad = require("@fastify/autoload");
 const { ElectronBlocker } = require("@ghostery/adblocker-electron");
 const fetch = require("cross-fetch");
-const { promises: fs } = require("fs");
+const { promises: fs, mkdirSync, writeFileSync, unlinkSync, existsSync } = require("fs");
 const os = require("os");
+const { spawn } = require("child_process");
+const AdmZip = require("adm-zip");
 
 const isPackaged = app ? app.isPackaged : process.mainModule?.filename.includes('app.asar');
 const envPath = isPackaged
@@ -18,6 +20,9 @@ let appWindow = null;
 let adblocker = null;
 const port = process.env.PORT;
 const fastify = Fastify({ logger: false });
+
+const APPS_DIR = path.join(os.homedir(), "AtlasLauncher", "official");
+const runningServers = {};
 
 const FILTER_LISTS = [
   "https://easylist.to/easylist/easylist.txt",
@@ -111,7 +116,6 @@ const AD_REMOVAL_SCRIPT = `
 })();
 `;
 
-// Launch apps
 async function launchApp({ url, headers = {} }) {
   if (appWindow && !appWindow.isDestroyed()) {
     appWindow.focus();
@@ -211,6 +215,66 @@ ipcMain.handle("get-external-apps", async () => {
   }
 });
 
+ipcMain.handle("app-is-installed", (event, { appId }) => {
+  const serverPath = path.join(APPS_DIR, appId, "server.js");
+  return existsSync(serverPath);
+});
+
+ipcMain.handle("app-install", async (event, { appId, githubRepo }) => {
+  const appDir = path.join(APPS_DIR, appId);
+  const zipPath = path.join(APPS_DIR, `${appId}-update.zip`);
+
+  try {
+    const apiRes = await fetch(`https://api.github.com/repos/${githubRepo}/releases/latest`);
+    const release = await apiRes.json();
+    const asset = release.assets?.[0];
+    if (!asset) throw new Error("No release asset found on latest release");
+
+    const zipRes = await fetch(asset.browser_download_url);
+    const buffer = Buffer.from(await zipRes.arrayBuffer());
+    mkdirSync(APPS_DIR, { recursive: true });
+    writeFileSync(zipPath, buffer);
+
+    mkdirSync(appDir, { recursive: true });
+    const zip = new AdmZip(zipPath);
+    zip.extractAllTo(appDir, true);
+
+    unlinkSync(zipPath);
+
+    return { success: true };
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+});
+
+ipcMain.handle("app-launch", async (event, { appId, port: appPort }) => {
+  const appDir = path.join(APPS_DIR, appId);
+  const serverPath = path.join(appDir, "server.js");
+
+  if (!existsSync(serverPath)) {
+    return { success: false, error: "Not installed — server.js not found" };
+  }
+
+  if (runningServers[appId]) {
+    runningServers[appId].kill();
+    delete runningServers[appId];
+  }
+
+  const proc = spawn("node", ["server.js"], {
+    cwd: appDir,
+    env: { ...process.env, PORT: String(appPort) },
+  });
+
+  runningServers[appId] = proc;
+  proc.on("error", (e) => console.error(`[${appId}] server error:`, e));
+  proc.stdout?.on("data", (d) => console.log(`[${appId}]`, d.toString().trim()));
+  proc.stderr?.on("data", (d) => console.error(`[${appId}]`, d.toString().trim()));
+
+  await new Promise(r => setTimeout(r, 1500));
+
+  return { success: true };
+});
+
 const createLauncherWindow = () => {
   launcherWindow = new BrowserWindow({
     width: 1920,
@@ -254,4 +318,10 @@ app.whenReady().then(async () => {
   } catch (error) { /* log */ }
 
   createLauncherWindow();
+
+  app.on("will-quit", () => {
+    Object.values(runningServers).forEach(proc => {
+      try { proc.kill(); } catch (_) {}
+    });
+  });
 });

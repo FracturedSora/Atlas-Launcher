@@ -9,4 +9,7 @@ contextBridge.exposeInMainWorld("backendAPI", {
   status: (callback) =>
     ipcRenderer.on("status", (event, data) => callback(data)),
   close: () => ipcRenderer.send("window-close"),
+  isInstalled: (appId) => ipcRenderer.invoke("app-is-installed", { appId }),
+  install: (appId, githubRepo) => ipcRenderer.invoke("app-install", { appId, githubRepo }),
+  launch: (appId, port) => ipcRenderer.invoke("app-launch", { appId, port }),
 });
