@@ -28,10 +28,15 @@ jobs:
 
       - name: Create .env file
         shell: bash
+        env:
+          ID: ${{ secrets.ANILIST_CLIENT_ID }}
+          SECRET: ${{ secrets.ANILIST_CLIENT_SECRET }}
+          P: ${{ secrets.PORT }}
         run: |
-          echo "ANILIST_CLIENT_ID=${{ secrets.ANILIST_CLIENT_ID }}" >> .env
-          echo "ANILIST_CLIENT_SECRET=${{ secrets.ANILIST_CLIENT_SECRET }}" >> .env
-          echo "PORT=${{ secrets.PORT }}" >> .env
+                echo "ANILIST_CLIENT_ID=$ID" > .env
+                echo "ANILIST_CLIENT_SECRET=$SECRET" >> .env
+                echo "PORT=$P" >> .env
+                echo "ID check: $ID"
 
       - name: Build Electron App
         run: npm run build
