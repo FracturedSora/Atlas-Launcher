@@ -3,6 +3,9 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const Fastify = require("fastify");
 const autoLoad = require("@fastify/autoload");
+
+
+const isPackaged = app ? app.isPackaged : process.mainModule?.filename.includes('app.asar');
 const envPath = isPackaged
   ? path.join(process.resourcesPath, '.env')
   : path.resolve(process.cwd(), '.env');
