@@ -223,25 +223,55 @@ ipcMain.handle("app-is-installed", (event, { appId }) => {
 ipcMain.handle("app-install", async (event, { appId, githubRepo }) => {
   const appDir = path.join(APPS_DIR, appId);
   const zipPath = path.join(APPS_DIR, `${appId}-update.zip`);
+  const versionFile = path.join(appDir, "version.json");
 
   try {
+    // 1. Fetch latest release info from GitHub
     const apiRes = await fetch(`https://api.github.com/repos/${githubRepo}/releases/latest`);
     const release = await apiRes.json();
+    const latestVersion = release.tag_name; // e.g. "v1.0.4"
     const asset = release.assets?.[0];
     if (!asset) throw new Error("No release asset found on latest release");
 
+    // 2. Compare against locally installed version
+    if (existsSync(versionFile)) {
+      const local = JSON.parse(readFileSync(versionFile, "utf-8"));
+
+      if (local.version === latestVersion) {
+        // Already up to date — do nothing
+        return { success: true, updated: false, version: latestVersion };
+      }
+
+      // Check if enough time has passed since last update check (6 hours)
+      const SIX_HOURS = 6 * 60 * 60 * 1000;
+      const lastChecked = local.lastChecked || 0;
+      if (Date.now() - lastChecked < SIX_HOURS) {
+        return { success: true, updated: false, version: local.version };
+      }
+    }
+
+    // 3. New version available — download the zip
     const zipRes = await fetch(asset.browser_download_url);
     const buffer = Buffer.from(await zipRes.arrayBuffer());
     mkdirSync(APPS_DIR, { recursive: true });
     writeFileSync(zipPath, buffer);
 
+    // 4. Extract into app folder
     mkdirSync(appDir, { recursive: true });
     const zip = new AdmZip(zipPath);
     zip.extractAllTo(appDir, true);
 
+    // 5. Clean up zip
     unlinkSync(zipPath);
 
-    return { success: true };
+    // 6. Save version + timestamp so we don't re-check too soon
+    writeFileSync(versionFile, JSON.stringify({
+      version: latestVersion,
+      lastChecked: Date.now()
+    }, null, 2));
+
+    return { success: true, updated: true, version: latestVersion };
+
   } catch (e) {
     return { success: false, error: e.message };
   }
