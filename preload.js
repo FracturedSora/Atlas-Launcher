@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld("backendAPI", {
     const cleanData = JSON.parse(JSON.stringify(data));
     ipcRenderer.send("open-app", cleanData);
   },
+  getExternalApps: () => ipcRenderer.invoke("get-external-apps"),
   status: (callback) =>
     ipcRenderer.on("status", (event, data) => callback(data)),
   close: () => ipcRenderer.send("window-close"),
