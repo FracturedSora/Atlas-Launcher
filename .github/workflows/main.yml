@@ -28,6 +28,7 @@ jobs:
       - name: Build Electron App
         run: npm run build
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANILIST_CLIENT_ID: ${{ secrets.ANILIST_CLIENT_ID }}
           ANILIST_CLIENT_SECRET: ${{ secrets.ANILIST_CLIENT_SECRET }}
           PORT: ${{ secrets.PORT }}
