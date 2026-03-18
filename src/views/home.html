@@ -5,12 +5,119 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="../styles/app.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
         <script src="../scripts/sidebar.js"></script>
+        <link rel="stylesheet" href="../styles/home.css" />
     </head>
     <body>
         <div id="sidebar"></div>
         <div class="app-container">
-            <h1>The home portal is coming soon</h1>
+            <div class="portal-content">
+
+                <div class="top-bar">
+                    <div class="greeting-block">
+                        <div class="greeting-time" id="greeting-time">Loading...</div>
+                        <div class="greeting-text" id="greeting-text">Welcome back</div>
+                    </div>
+                    <div class="top-bar-right">
+                        <div class="status-pill" id="adblocker-status">
+                            <div class="dot"></div>
+                            <span>Ad Blocker</span>
+                        </div>
+                        <div class="status-pill active">
+                            <div class="dot"></div>
+                            <span id="season-label">Loading season</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-grid">
+                    <div class="featured-hero" id="featured-hero">
+                        <div class="hero-bg skeleton" id="hero-bg"></div>
+                        <div class="hero-overlay"></div>
+                        <div class="hero-nav">
+                            <button class="hero-nav-btn" id="hero-prev">&#8249;</button>
+                            <button class="hero-nav-btn" id="hero-next">&#8250;</button>
+                        </div>
+                        <div class="hero-content">
+                            <div class="hero-dots" id="hero-dots"></div>
+                            <div class="hero-badge">✦ Trending Now</div>
+                            <div class="hero-title skeleton" id="hero-title" style="height:30px;width:60%;margin-bottom:8px;"></div>
+                            <div class="hero-meta" id="hero-meta"></div>
+                            <div class="hero-synopsis skeleton" id="hero-synopsis" style="height:32px;width:90%;"></div>
+                        </div>
+                    </div>
+                    <div class="airing-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">Airing Today</div>
+                            <div class="panel-count" id="airing-count">—</div>
+                        </div>
+                        <div class="panel-list" id="airing-list">
+                            ${Array(5).fill(`
+                                <div class="panel-item">
+                                    <div class="panel-item-img skeleton"></div>
+                                    <div class="panel-item-info">
+                                        <div class="skeleton" style="height:11px;width:80%;margin-bottom:5px;border-radius:3px;"></div>
+                                        <div class="skeleton" style="height:9px;width:50%;border-radius:3px;"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="top-airing-panel">
+                        <div class="panel-header">
+                            <div class="panel-title">Top This Season</div>
+                            <div class="panel-count" id="top-count">—</div>
+                        </div>
+                        <div class="panel-list" id="top-list">
+                            ${Array(5).fill(`
+                                <div class="rank-item">
+                                    <div class="rank-num skeleton" style="width:22px;height:18px;border-radius:3px;"></div>
+                                    <div class="rank-img skeleton"></div>
+                                    <div class="rank-info">
+                                        <div class="skeleton" style="height:10px;width:75%;margin-bottom:5px;border-radius:3px;"></div>
+                                        <div class="skeleton" style="height:9px;width:40%;border-radius:3px;"></div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                <div class="bottom-bar">
+                    <div class="quick-stat">
+                        <div class="quick-stat-icon">📺</div>
+                        <div>
+                            <div class="quick-stat-label">This Season</div>
+                            <div class="quick-stat-value" id="stat-season">—</div>
+                        </div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-icon">🔥</div>
+                        <div>
+                            <div class="quick-stat-label">Airing Today</div>
+                            <div class="quick-stat-value" id="stat-today">—</div>
+                        </div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-icon">⭐</div>
+                        <div>
+                            <div class="quick-stat-label">Top Score</div>
+                            <div class="quick-stat-value" id="stat-topscore">—</div>
+                        </div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-icon">🗓️</div>
+                        <div>
+                            <div class="quick-stat-label">Today</div>
+                            <div class="quick-stat-value" id="stat-date">—</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <script src="../scripts/home.js"></script>
     </body>
 </html>
