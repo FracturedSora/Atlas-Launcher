@@ -5,7 +5,10 @@
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "build:all": "electron-builder -wl"
   },
   "repository": {
     "type": "git",
