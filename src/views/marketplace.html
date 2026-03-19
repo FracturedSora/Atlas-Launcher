@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas Marketplace</title>
+    <link rel="stylesheet" href="../styles/app.css" />
+    <link rel="stylesheet" href="../styles/marketplace.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+    <script src="../scripts/sidebar.js" defer></script>
+</head>
+<body>
+    <div id="sidebar"></div>
+
+    <div class="market-shell">
+
+        <header class="market-header">
+            <div class="market-header-left">
+                <h1 class="market-title">Marketplace</h1>
+                <p class="market-subtitle">Browse and manage Atlas extensions</p>
+            </div>
+            <div class="market-header-right">
+                <div id="launcher-update-badge" class="update-badge hidden">
+                    <span class="update-dot"></span>
+                    <span id="update-badge-text">Update available</span>
+                </div>
+                <div class="market-search-wrap">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
+                    <input type="text" id="market-search" class="market-search" placeholder="Search apps..." />
+                </div>
+            </div>
+        </header>
+
+        <div class="market-tabs">
+            <button class="market-tab active" data-tab="browse">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                Browse
+            </button>
+            <button class="market-tab" data-tab="installed">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                Installed
+                <span class="tab-count" id="installed-count">0</span>
+            </button>
+            <button class="market-tab" data-tab="launcher">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Atlas Launcher
+            </button>
+        </div>
+
+        <div class="market-panel active" id="panel-browse">
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="anime">Anime</button>
+                <button class="filter-btn" data-filter="manga">Manga</button>
+                <button class="filter-btn" data-filter="nsfw">18+</button>
+            </div>
+            <div class="app-grid" id="browse-grid">
+                <div class="grid-loading">
+                    <div class="spinner"></div>
+                    <p>Fetching registry…</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-panel" id="panel-installed">
+            <div class="app-grid" id="installed-grid">
+                <div class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 12h.01"/></svg>
+                    <p>No apps installed yet</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="market-panel" id="panel-launcher">
+            <div class="launcher-card" id="launcher-card">
+                <div class="launcher-card-header">
+                    <div class="launcher-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <div class="launcher-meta">
+                        <h2 class="launcher-name">Atlas Launcher</h2>
+                        <p class="launcher-desc">Your unified media hub</p>
+                    </div>
+                    <div class="launcher-version-block">
+                        <span class="version-label">Current</span>
+                        <span class="version-num" id="current-version">—</span>
+                    </div>
+                    <div class="launcher-version-block">
+                        <span class="version-label">Latest</span>
+                        <span class="version-num" id="latest-version">—</span>
+                    </div>
+                </div>
+                <div class="launcher-status" id="launcher-status">
+                    <div class="spinner-sm"></div>
+                    <span>Checking for updates…</span>
+                </div>
+                <div class="launcher-actions">
+                    <button class="btn-update" id="btn-launcher-update" disabled>
+                        Update Launcher
+                    </button>
+                    <a class="btn-changelog" id="btn-changelog" href="#" target="_blank">
+                        View Changelog
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../scripts/marketplace.js"></script>
+</body>
+</html>
