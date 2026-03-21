@@ -2,6 +2,9 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("backendAPI", {
 
+  // Add this inside your contextBridge.exposeInMainWorld block:
+    checkUpdate: (appId, repo) => ipcRenderer.invoke("app-check-update", { appId, repo }),
+
   openApp: (data) => {
     const cleanData = JSON.parse(JSON.stringify(data));
     ipcRenderer.send("open-app", cleanData);

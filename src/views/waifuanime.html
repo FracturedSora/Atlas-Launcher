@@ -10,20 +10,117 @@
     <body>
         <div id="sidebar"></div>
         <div class="app-container">
-            <h1>Waifu Anime Coming Soon</h1>
-
+            <img src="../../public/banners/waifuanime.png" class="background-img" />
+            <p id="status" style="color:#aaa;font-size:0.8rem;margin-bottom:10px;"></p>
             <button
                 id="launch-btn"
                 class="download"
-                style="
-                    background-color: #555;
-                    color: #fff;
-                    box-shadow: none;
-                "
+                data-url="http://localhost:3002"
                 disabled
             >
-                Coming Soon
+                Checking...
             </button>
         </div>
+
+        <script>
+            const APP_ID      = "waifuanime";
+            const GITHUB_REPO = "FracturedSora/WaifuStuff";
+            const PORT        = 3002;
+
+            const btn    = document.getElementById("launch-btn");
+            const status = document.getElementById("status");
+
+            async function init() {
+                const installed = await window.backendAPI.isInstalled(APP_ID);
+
+                // 1. Not installed at all -> Force Download (waits for user click)
+                if (!installed) {
+                    btn.textContent = "Download & Launch";
+                    btn.disabled = false;
+                    btn.onclick = installThenLaunch;
+                    return;
+                }
+
+                // 2. Installed -> Check for updates silently
+                btn.disabled = true;
+                btn.textContent = "Checking for updates...";
+
+                try {
+                    const updateCheck = await window.backendAPI.checkUpdate(APP_ID, GITHUB_REPO);
+
+                    // Grab the last known version we saved locally
+                    const localVerKey = `version_${APP_ID}`;
+                    const localVer = localStorage.getItem(localVerKey);
+
+                    // ONLY update if GitHub reports an update AND the latest version string doesn't match our local record
+                    if (updateCheck && updateCheck.updateAvailable && updateCheck.latestVersion && updateCheck.latestVersion !== localVer) {
+                        btn.textContent = "Updating WaifuAnime...";
+                        const installResult = await window.backendAPI.install(APP_ID, GITHUB_REPO);
+
+                        // If update succeeded, save the new version tag so we don't download it again next time
+                        if (installResult && installResult.success) {
+                            localStorage.setItem(localVerKey, updateCheck.latestVersion);
+                        }
+                    } else if (updateCheck && updateCheck.latestVersion) {
+                        // No update needed. Just sync the local storage to be safe.
+                        localStorage.setItem(localVerKey, updateCheck.latestVersion);
+                    }
+                } catch (e) {
+                    console.warn("Failed to check for updates, launching anyway.", e);
+                }
+
+                // 3. Launch
+                await startServer();
+            }
+
+            async function installThenLaunch() {
+                btn.disabled = true;
+                btn.textContent = "Downloading...";
+
+                const result = await window.backendAPI.install(APP_ID, GITHUB_REPO);
+                if (!result.success) {
+                    btn.textContent = "Retry Download";
+                    btn.disabled = false;
+                    btn.onclick = installThenLaunch;
+                    return;
+                }
+
+                // On first fresh install, grab the current version string from GitHub and cache it
+                try {
+                    const updateCheck = await window.backendAPI.checkUpdate(APP_ID, GITHUB_REPO);
+                    if (updateCheck && updateCheck.latestVersion) {
+                        localStorage.setItem(`version_${APP_ID}`, updateCheck.latestVersion);
+                    }
+                } catch (e) {}
+
+                await startServer();
+            }
+
+            async function startServer() {
+                btn.disabled = true;
+                btn.textContent = "Starting...";
+
+                const result = await window.backendAPI.launch(APP_ID, PORT);
+                if (!result.success) {
+                    btn.textContent = "Retry Start";
+                    btn.disabled = false;
+                    btn.onclick = startServer;
+                    return;
+                }
+
+                btn.textContent = "Launch WaifuAnime";
+                btn.disabled = false;
+
+                // Sync the HTML data-url attribute dynamically so launchapp.js opens the right port
+                btn.setAttribute("data-url", `http://localhost:${PORT}`);
+
+                // Clear out our JS onclick handlers so the standard launchapp.js takes over and opens the app window
+                btn.onclick = null;
+            }
+
+            init();
+        </script>
+
+        <script src="../scripts/launchapp.js"></script>
     </body>
 </html>

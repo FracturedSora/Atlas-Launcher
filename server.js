@@ -134,7 +134,7 @@ async function launchApp({ url, headers = {} }) {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
-      devTools: false,
+      devTools: true,
     },
   });
 
@@ -232,26 +232,114 @@ ipcMain.handle("app-is-installed", (event, { appId }) => {
   return existsSync(serverPath);
 });
 
+// Check GitHub for updates
+ipcMain.handle("app-check-update", async (event, args) => {
+  const { appId, repo } = args;
+  const versionFile = path.join(APPS_DIR, appId, "version.json");
+
+  // If there's no version file, it needs a fresh install
+  if (!require("fs").existsSync(versionFile)) return { updateAvailable: true };
+
+  try {
+    const currentVersion = JSON.parse(require("fs").readFileSync(versionFile, "utf-8")).versionTag;
+
+    const apiRes = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
+      headers: { "User-Agent": "AtlasLauncher" }
+    });
+
+    if (!apiRes.ok) return { updateAvailable: false };
+
+    const releaseData = await apiRes.json();
+    // Make sure you captured `latestVersion = releaseData.tag_name` earlier in the handler!
+        const latestVersion = releaseData?.tag_name || "unknown";
+
+        // 6. Write version info
+        writeFileSync(
+          path.join(appDir, "version.json"),
+          JSON.stringify({
+            installedAt: Date.now(),
+            source: finalUrl,
+            versionTag: latestVersion // <-- ADD THIS LINE
+          }, null, 2)
+        );
+    // Compare versions
+    if (!currentVersion || latestVersion !== currentVersion) {
+      console.log(`[Update] ${appId} update found! ${currentVersion || "None"} -> ${latestVersion}`);
+      return { updateAvailable: true, latestVersion };
+    }
+
+    console.log(`[Update] ${appId} is up to date (${currentVersion}).`);
+    return { updateAvailable: false, latestVersion };
+  } catch (e) {
+    console.error("[Update Check Error]:", e.message);
+    return { updateAvailable: false }; // Fail safely if offline
+  }
+});
+
 // Download latest GitHub release zip, extract, delete zip
-ipcMain.handle("app-install", async (event, { appId, downloadUrl }) => {
+ipcMain.handle("app-install", async (event, args) => {
+  const { appId, repo, downloadUrl } = args;
+
   const appDir  = path.join(APPS_DIR, appId);
   const zipPath = path.join(APPS_DIR, `${appId}-update.zip`);
 
   try {
-    if (!downloadUrl) throw new Error("No download URL provided");
+    let finalUrl = downloadUrl;
+    let targetRepo = repo;
 
-    // 1. Download the zip directly from the provided URL
-    const zipRes = await fetch(downloadUrl);
+    // 🛡️ THE FIX: If the frontend passed "FracturedSora/WaifuStuff" into the downloadUrl variable,
+    // intercept it and treat it as a GitHub repository string instead.
+    if (finalUrl && !finalUrl.startsWith("http")) {
+      targetRepo = finalUrl;
+      finalUrl = null;
+    }
+
+    // 1. If we have a GitHub repo, find the latest release
+    if (!finalUrl && targetRepo) {
+      console.log(`[Install] Querying GitHub API for latest release of ${targetRepo}...`);
+      const apiRes = await fetch(`https://api.github.com/repos/${targetRepo}/releases/latest`, {
+        headers: { "User-Agent": "AtlasLauncher" } // GitHub API requires a User-Agent
+      });
+
+      if (!apiRes.ok) throw new Error(`GitHub API Error: ${apiRes.status} ${apiRes.statusText}`);
+
+      const releaseData = await apiRes.json();
+
+      // Find the asset that matches our appId (e.g., "waifuanime.zip")
+      const targetAssetName = `${appId.toLowerCase()}.zip`;
+      const asset = releaseData.assets.find(a => a.name.toLowerCase() === targetAssetName);
+
+      if (!asset) {
+        throw new Error(`Could not find "${targetAssetName}" in the latest release of ${targetRepo}.`);
+      }
+
+      finalUrl = asset.browser_download_url;
+      console.log(`[Install] Found release asset: ${finalUrl}`);
+    }
+
+    if (!finalUrl || !finalUrl.startsWith("http")) {
+        throw new Error("No valid absolute download URL resolved.");
+    }
+
+    // 2. Download the zip file
+    console.log(`[Install] Downloading ${appId} from ${finalUrl}...`);
+    const zipRes = await fetch(finalUrl, {
+      headers: { "User-Agent": "AtlasLauncher" }
+    });
+
     if (!zipRes.ok) throw new Error(`Download failed: ${zipRes.status} ${zipRes.statusText}`);
+
     const buffer = Buffer.from(await zipRes.arrayBuffer());
 
-    // 2. Write zip to disk
+    // 3. Write zip to disk
     mkdirSync(APPS_DIR, { recursive: true });
     writeFileSync(zipPath, buffer);
 
-    // 3. Extract into app folder — manually to avoid EPERM chmod on Windows
+    // 4. Extract into app folder
+    console.log(`[Install] Extracting ${appId}...`);
     mkdirSync(appDir, { recursive: true });
     const zip = new AdmZip(zipPath);
+
     zip.getEntries().forEach(entry => {
       if (entry.isDirectory) return;
       try {
@@ -263,17 +351,20 @@ ipcMain.handle("app-install", async (event, { appId, downloadUrl }) => {
       }
     });
 
-    // 4. Clean up
+    // 5. Clean up the zip file
     try { unlinkSync(zipPath); } catch (_) {}
 
-    // 5. Write version info so we know it's installed
+    // 6. Write version info
     writeFileSync(
       path.join(appDir, "version.json"),
-      JSON.stringify({ installedAt: Date.now(), downloadUrl }, null, 2)
+      JSON.stringify({ installedAt: Date.now(), source: finalUrl }, null, 2)
     );
 
+    console.log(`[Install] Successfully installed ${appId}!`);
     return { success: true };
+
   } catch (e) {
+    console.error(`[Install Error - ${appId}]:`, e.message);
     try { if (existsSync(zipPath)) unlinkSync(zipPath); } catch (_) {}
     return { success: false, error: e.message };
   }

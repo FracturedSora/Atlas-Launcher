@@ -45,7 +45,8 @@
     ],
     "asar": true,
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "public/logos/launcher.ico"
     },
     "linux": {
       "target": "AppImage",
