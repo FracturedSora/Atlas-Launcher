@@ -7,7 +7,7 @@ const { ElectronBlocker } = require("@ghostery/adblocker-electron");
 const fetch = require("cross-fetch");
 const { promises: fs, mkdirSync, writeFileSync, unlinkSync, existsSync } = require("fs");
 const os = require("os");
-const { spawn } = require("child_process");
+const { fork } = require("child_process");
 const AdmZip = require("adm-zip");
 
 const isPackaged = app ? app.isPackaged : process.mainModule?.filename.includes('app.asar');
@@ -233,9 +233,13 @@ ipcMain.handle("app-is-installed", (event, { appId }) => {
 });
 
 // Check GitHub for updates
+// Check GitHub for updates
 ipcMain.handle("app-check-update", async (event, args) => {
   const { appId, repo } = args;
-  const versionFile = path.join(APPS_DIR, appId, "version.json");
+
+  // THE FIX: Define appDir here!
+  const appDir = path.join(APPS_DIR, appId);
+  const versionFile = path.join(appDir, "version.json");
 
   // If there's no version file, it needs a fresh install
   if (!require("fs").existsSync(versionFile)) return { updateAvailable: true };
@@ -250,21 +254,21 @@ ipcMain.handle("app-check-update", async (event, args) => {
     if (!apiRes.ok) return { updateAvailable: false };
 
     const releaseData = await apiRes.json();
-    // Make sure you captured `latestVersion = releaseData.tag_name` earlier in the handler!
-        const latestVersion = releaseData?.tag_name || "unknown";
+    const latestVersion = releaseData?.tag_name || "unknown";
 
-        // 6. Write version info
-        writeFileSync(
-          path.join(appDir, "version.json"),
-          JSON.stringify({
-            installedAt: Date.now(),
-            source: finalUrl,
-            versionTag: latestVersion // <-- ADD THIS LINE
-          }, null, 2)
-        );
     // Compare versions
     if (!currentVersion || latestVersion !== currentVersion) {
       console.log(`[Update] ${appId} update found! ${currentVersion || "None"} -> ${latestVersion}`);
+
+      // Write the new version info
+      require("fs").writeFileSync(
+        versionFile, // Changed to use versionFile directly for safety
+        JSON.stringify({
+          installedAt: Date.now(),
+          versionTag: latestVersion
+        }, null, 2)
+      );
+
       return { updateAvailable: true, latestVersion };
     }
 
@@ -272,7 +276,7 @@ ipcMain.handle("app-check-update", async (event, args) => {
     return { updateAvailable: false, latestVersion };
   } catch (e) {
     console.error("[Update Check Error]:", e.message);
-    return { updateAvailable: false }; // Fail safely if offline
+    return { updateAvailable: false };
   }
 });
 
@@ -648,6 +652,7 @@ ipcMain.handle("launcher-update", async (event, { downloadUrl, fileName }) => {
 });
 
 // Spawn server.js from the app folder and open it in a window
+// Spawn server.js from the app folder and open it in a window
 ipcMain.handle("app-launch", async (event, { appId, port: appPort }) => {
   const appDir = path.join(APPS_DIR, appId);
   const serverPath = path.join(appDir, "server.js");
@@ -662,9 +667,12 @@ ipcMain.handle("app-launch", async (event, { appId, port: appPort }) => {
     delete runningServers[appId];
   }
 
-  const proc = spawn("node", ["server.js"], {
+  // THE FIX: Use 'fork' instead of 'spawn'.
+  // This uses Electron's built-in Node engine so the user doesn't need Node installed!
+  const proc = fork("server.js", [], {
     cwd: appDir,
     env: { ...process.env, PORT: String(appPort) },
+    stdio: "pipe" // This allows us to still capture console.log outputs
   });
 
   runningServers[appId] = proc;
