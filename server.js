@@ -134,7 +134,7 @@ async function launchApp({ url, headers = {} }) {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
-      devTools: true,
+      devTools: false,
     },
   });
 
@@ -688,7 +688,7 @@ const createLauncherWindow = () => {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
-      devTools: true,
+      devTools: false,
     },
   });
   launcherWindow.loadFile("src/views/home.html");
