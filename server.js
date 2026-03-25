@@ -10,6 +10,10 @@ const os = require("os");
 const { fork } = require("child_process");
 const AdmZip = require("adm-zip");
 
+const waifuAnime = require("./src/WaifuAnime/hook");
+const waifuManga = require("./src/WaifuManga/hook");
+const waifuBoard = require("./src/WaifuBoard/hook");
+
 const isPackaged = app ? app.isPackaged : process.mainModule?.filename.includes('app.asar');
 const envPath = isPackaged
   ? path.join(process.resourcesPath, '.env')
@@ -134,7 +138,7 @@ async function launchApp({ url, headers = {} }) {
       contextIsolation: true,
       nodeIntegration: false,
       webSecurity: true,
-      devTools: false,
+      devTools: true,
     },
   });
 
@@ -688,6 +692,7 @@ ipcMain.handle("app-launch", async (event, { appId, port: appPort }) => {
 
 // ─── Launcher Window ──────────────────────────────────────────────────────────
 const createLauncherWindow = () => {
+
   launcherWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
@@ -696,11 +701,12 @@ const createLauncherWindow = () => {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
       nodeIntegration: false,
-      devTools: false,
+      devTools: true,
     },
   });
   launcherWindow.loadFile("src/views/home.html");
   launcherWindow.show();
+
 };
 
 // ─── Fastify API ──────────────────────────────────────────────────────────────
@@ -721,6 +727,10 @@ app.whenReady().then(async () => {
     callback({ path: filePath, headers: { "Cache-Control": "no-store" } });
   });
 
+  waifuAnime.start();
+  waifuManga.start();
+  waifuBoard.start();
+
   initAdBlocker().then(() => {
     if (appWindow && !appWindow.isDestroyed()) {
       adblocker.enableBlockingInSession(appWindow.webContents.session);
@@ -740,5 +750,8 @@ app.whenReady().then(async () => {
     [...Object.values(runningServers), ...Object.values(runningExternalServers)].forEach(proc => {
       try { proc.kill(); } catch (_) {}
     });
+    waifuAnime.stop();
+    waifuManga.stop();
+    waifuBoard.stop();
   });
 });

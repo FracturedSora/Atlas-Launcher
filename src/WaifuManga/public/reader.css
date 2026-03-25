@@ -1,0 +1,958 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+/* ═══════════════════════════════════════════════════
+   reader.css — WaifuManga Reader
+   Dark antiquarian library × cinematic — matches home/series
+═══════════════════════════════════════════════════ */
+
+:root {
+    --topbar-h:    52px;
+    --botbar-h:    56px;
+    --novel-font:  'Lora', serif;
+    --novel-size:  18px;
+    --novel-lh:    1.8;
+    --novel-width: 680px;
+    --radius:      10px;
+    --radius-sm:   6px;
+    --transition:  0.25s ease;
+}
+
+/* ── Themes ──────────────────────────────────────── */
+
+/* Default — matches site palette */
+.theme-dark {
+    --bg:         #0a0a0b;
+    --bg2:        #0f0f11;
+    --surface:    rgba(255,255,255,0.03);
+    --surface-hi: rgba(255,255,255,0.06);
+    --border:     rgba(255,255,255,0.06);
+    --border-hi:  rgba(255,255,255,0.12);
+    --text:       #f0ece4;
+    --text-dim:   rgba(240,236,228,0.5);
+    --text-muted: rgba(240,236,228,0.28);
+    --accent:     #c9a84c;
+    --accent2:    #e8c97a;
+    --progress:   linear-gradient(90deg, #c9a84c, #e8c97a);
+}
+
+/* Sepia */
+.theme-sepia {
+    --bg:         #13100b;
+    --bg2:        #1c1710;
+    --surface:    rgba(201,168,76,0.06);
+    --surface-hi: rgba(201,168,76,0.11);
+    --border:     rgba(201,168,76,0.1);
+    --border-hi:  rgba(201,168,76,0.22);
+    --text:       #e8d9bb;
+    --text-dim:   rgba(232,217,187,0.58);
+    --text-muted: rgba(232,217,187,0.32);
+    --accent:     #c9a84c;
+    --accent2:    #a07840;
+    --progress:   linear-gradient(90deg, #c9a84c, #a07840);
+}
+
+/* AMOLED */
+.theme-amoled {
+    --bg:         #000000;
+    --bg2:        #080808;
+    --surface:    rgba(255,255,255,0.03);
+    --surface-hi: rgba(255,255,255,0.06);
+    --border:     rgba(255,255,255,0.06);
+    --border-hi:  rgba(255,255,255,0.11);
+    --text:       #d8d4cc;
+    --text-dim:   rgba(216,212,204,0.48);
+    --text-muted: rgba(216,212,204,0.26);
+    --accent:     #a89060;
+    --accent2:    #786040;
+    --progress:   linear-gradient(90deg, #a89060, #786040);
+}
+
+/* Parchment — replaces Forest, fits the library theme */
+.theme-parchment {
+    --bg:         #1a1610;
+    --bg2:        #211c14;
+    --surface:    rgba(200,175,120,0.06);
+    --surface-hi: rgba(200,175,120,0.1);
+    --border:     rgba(200,175,120,0.1);
+    --border-hi:  rgba(200,175,120,0.2);
+    --text:       #f0e6cc;
+    --text-dim:   rgba(240,230,204,0.55);
+    --text-muted: rgba(240,230,204,0.3);
+    --accent:     #d4a853;
+    --accent2:    #a07830;
+    --progress:   linear-gradient(90deg, #d4a853, #a07830);
+}
+
+/* Midnight */
+.theme-midnight {
+    --bg:         #08080f;
+    --bg2:        #0d0d1a;
+    --surface:    rgba(201,168,76,0.04);
+    --surface-hi: rgba(201,168,76,0.08);
+    --border:     rgba(201,168,76,0.08);
+    --border-hi:  rgba(201,168,76,0.16);
+    --text:       #d8d4e8;
+    --text-dim:   rgba(216,212,232,0.5);
+    --text-muted: rgba(216,212,232,0.28);
+    --accent:     #c9a84c;
+    --accent2:    #9a7830;
+    --progress:   linear-gradient(90deg, #c9a84c, #9a7830);
+}
+
+/* ── Reset ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans, 'DM Sans', system-ui, sans-serif);
+    overflow: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Grain texture — matches home/series pages */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+}
+
+/* ── Scrollbars ──────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ═══════════════════════════════════════════════════
+   TOP BAR
+═══════════════════════════════════════════════════ */
+.reader-topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--topbar-h);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: rgba(10,10,11,0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+/* Gold rule under topbar */
+.reader-topbar::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.15), transparent);
+}
+
+.reader-topbar.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 0;
+    flex: 1;
+}
+
+.topbar-center {
+    flex: 1;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    letter-spacing: 0.05em;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.chapter-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.series-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chapter-name {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Icon buttons */
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.icon-btn:hover {
+    background: var(--surface-hi);
+    color: var(--accent);
+    border-color: rgba(201,168,76,0.3);
+}
+
+/* ═══════════════════════════════════════════════════
+   NOVEL PROGRESS BAR
+═══════════════════════════════════════════════════ */
+.novel-progress-bar {
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--border);
+    z-index: 190;
+}
+
+.novel-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--progress);
+    transition: width 0.1s linear;
+}
+
+/* ═══════════════════════════════════════════════════
+   SETTINGS PANEL
+═══════════════════════════════════════════════════ */
+.glass-panel {
+    background: rgba(10,10,11,0.92);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+}
+
+.settings-panel {
+    position: fixed;
+    top: var(--topbar-h);
+    right: 0;
+    width: 300px;
+    max-height: calc(100vh - var(--topbar-h));
+    overflow-y: auto;
+    z-index: 300;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    border-left: 1px solid var(--border);
+    border-radius: 0 0 0 var(--radius);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-panel.open { transform: translateX(0); }
+
+.settings-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 250;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(2px);
+}
+
+.settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Gold rule under settings header */
+.settings-header::after {
+    display: none; /* handled by border-bottom */
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.setting-label {
+    font-size: 0.67rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Theme swatches */
+.theme-swatches {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.swatch {
+    flex: 1;
+    min-width: 66px;
+    padding: 9px 5px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    cursor: pointer;
+    color: rgba(240,236,228,0.6);
+    transition: all 0.15s;
+    text-align: center;
+}
+
+.swatch.active {
+    border-color: var(--accent) !important;
+    color: var(--accent);
+    box-shadow: 0 0 8px rgba(201,168,76,0.15);
+}
+
+.swatch:hover { filter: brightness(1.2); }
+
+/* Font options */
+.font-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.font-opt {
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    transition: all 0.15s;
+}
+
+.font-opt.active {
+    border-color: rgba(201,168,76,0.4);
+    color: var(--accent);
+    background: rgba(201,168,76,0.06);
+}
+
+.font-opt:hover {
+    background: var(--surface-hi);
+    color: var(--text);
+}
+
+/* Slider */
+.slider {
+    width: 100%;
+    height: 3px;
+    border-radius: 99px;
+    appearance: none;
+    background: var(--border-hi);
+    outline: none;
+    cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+}
+
+/* Option groups */
+.width-options, .dir-options, .layout-options, .fit-options {
+    display: flex;
+    gap: 5px;
+}
+
+.width-opt, .dir-opt, .layout-opt, .fit-opt {
+    flex: 1;
+    padding: 9px 5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    letter-spacing: 0.02em;
+}
+
+.width-opt.active, .dir-opt.active, .layout-opt.active, .fit-opt.active {
+    border-color: rgba(201,168,76,0.4);
+    color: var(--accent);
+    background: rgba(201,168,76,0.06);
+}
+
+.width-opt:hover, .dir-opt:hover, .layout-opt:hover, .fit-opt:hover {
+    background: var(--surface-hi);
+    color: var(--text);
+}
+
+/* ═══════════════════════════════════════════════════
+   MANGA READER
+═══════════════════════════════════════════════════ */
+.manga-reader {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.tap-zone {
+    position: absolute;
+    top: 0;
+    bottom: var(--botbar-h);
+    width: 25%;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.tap-left  { left: 0; }
+.tap-right { right: 0; }
+
+.manga-viewport {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding-top: var(--topbar-h);
+    padding-bottom: var(--botbar-h);
+    background: var(--bg);
+}
+
+.manga-pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+}
+
+.page-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    flex-shrink: 0;
+}
+
+.page-img {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    transition: opacity 0.2s;
+    min-width: 1px;
+    min-height: 1px;
+}
+
+.page-img[data-fit="height"] {
+    height: 100%;
+    width: auto;
+    max-width: 100vw;
+}
+
+.page-img[data-fit="width"] {
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - var(--topbar-h) - var(--botbar-h));
+}
+
+.page-img[data-fit="original"] {
+    max-height: none;
+    max-width: none;
+}
+
+.page-img.single {
+    max-height: calc(100vh - var(--topbar-h) - var(--botbar-h));
+}
+
+.page-img.double {
+    max-width: 50vw;
+    max-height: calc(100vh - var(--topbar-h) - var(--botbar-h));
+}
+
+/* Webtoon */
+.webtoon-viewport {
+    display: none;
+    height: 100vh;
+    overflow-y: auto;
+    padding-top: var(--topbar-h);
+    background: var(--bg);
+    scroll-behavior: smooth;
+}
+
+.webtoon-pages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.webtoon-img {
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}
+
+/* Bottom bar */
+.manga-bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--botbar-h);
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 16px;
+    background: rgba(10,10,11,0.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    transition: transform var(--transition), opacity var(--transition);
+}
+
+/* Gold rule above bottom bar */
+.manga-bottom-bar::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.1), transparent);
+}
+
+.manga-bottom-bar.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.nav-btn {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-dim);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+}
+
+.nav-btn:hover {
+    background: rgba(201,168,76,0.08);
+    color: var(--accent);
+    border-color: rgba(201,168,76,0.3);
+}
+
+.manga-scrubber-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.manga-scrubber {
+    width: 100%;
+    height: 3px;
+    appearance: none;
+    border-radius: 99px;
+    background: var(--border-hi);
+    outline: none;
+    cursor: pointer;
+}
+
+.manga-scrubber::-webkit-slider-thumb {
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(201,168,76,0.4);
+}
+
+/* ═══════════════════════════════════════════════════
+   NOVEL READER
+═══════════════════════════════════════════════════ */
+.novel-reader {
+    height: 100vh;
+    overflow-y: auto;
+    padding-top: calc(var(--topbar-h) + 6px);
+    padding-bottom: 120px;
+    scroll-behavior: smooth;
+    background: var(--bg);
+}
+
+.novel-content {
+    max-width: var(--novel-width);
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+    font-family: var(--novel-font);
+    font-size: var(--novel-size);
+    line-height: var(--novel-lh);
+    color: var(--text);
+}
+
+.novel-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    margin-bottom: 40px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    /* Gold rule under meta — matches section titles */
+    position: relative;
+}
+
+.novel-meta::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(201,168,76,0.2), transparent);
+}
+
+.novel-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: calc(var(--novel-size) * 1.25);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--text);
+    margin: 2.2em 0 0.9em;
+    text-align: center;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+/* Ornamental lines flanking headings */
+.novel-heading::before,
+.novel-heading::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3));
+}
+
+.novel-heading::after {
+    background: linear-gradient(-90deg, transparent, rgba(201,168,76,0.3));
+}
+
+.novel-heading:first-of-type { margin-top: 0; }
+
+.novel-para {
+    margin-bottom: 1.2em;
+    text-align: justify;
+    hyphens: auto;
+    color: var(--text);
+    user-select: text;
+    cursor: text;
+    font-weight: 300;
+}
+
+/* Drop cap */
+.novel-para:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.4em;
+    line-height: 0.78;
+    float: left;
+    margin: 0.05em 0.1em 0 0;
+    color: var(--accent);
+    font-weight: 900;
+}
+
+.novel-para em {
+    font-style: italic;
+    color: var(--text-dim);
+}
+
+.novel-para::selection,
+.novel-para *::selection {
+    background: rgba(201,168,76,0.2);
+    color: var(--text);
+}
+
+/* Chapter end ornament */
+.novel-end-marker {
+    text-align: center;
+    margin: 60px 0 20px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+}
+
+.novel-end-marker::before,
+.novel-end-marker::after {
+    content: '';
+    display: inline-block;
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3));
+}
+
+.novel-end-marker::after {
+    background: linear-gradient(-90deg, transparent, rgba(201,168,76,0.3));
+}
+
+.novel-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 80px 0;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+}
+
+/* Novel chapter nav */
+.novel-chapter-nav {
+    max-width: var(--novel-width);
+    margin: 0 auto;
+    padding: 0 24px 40px;
+    display: flex;
+    gap: 11px;
+}
+
+.nav-chapter-btn {
+    flex: 1;
+    padding: 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+}
+
+.nav-chapter-btn:hover {
+    background: var(--surface-hi);
+    color: var(--text);
+    border-color: var(--border-hi);
+}
+
+.nav-chapter-btn.primary {
+    background: rgba(201,168,76,0.08);
+    border-color: rgba(201,168,76,0.3);
+    color: var(--accent);
+}
+
+.nav-chapter-btn.primary:hover {
+    background: rgba(201,168,76,0.14);
+    border-color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════
+   LOADER OVERLAY
+═══════════════════════════════════════════════════ */
+.reader-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    letter-spacing: 0.04em;
+}
+
+/* ═══════════════════════════════════════════════════
+   SPINNER
+═══════════════════════════════════════════════════ */
+.spinner {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border-hi);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.spinner.large {
+    width: 38px; height: 38px;
+    border-width: 2px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════════════
+   ERROR STATE
+═══════════════════════════════════════════════════ */
+.reader-error {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: var(--bg);
+    color: var(--text-dim);
+    text-align: center;
+    padding: 32px;
+}
+
+.error-icon {
+    font-size: 2.2rem;
+    color: var(--accent);
+    opacity: 0.6;
+}
+
+.back-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.83rem;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: var(--radius-sm);
+    padding: 7px 16px;
+    transition: all 0.15s;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    background: rgba(201,168,76,0.08);
+    border-color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════
+   PAGE INDICATOR
+═══════════════════════════════════════════════════ */
+.page-indicator {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════════
+   MODE VISIBILITY
+═══════════════════════════════════════════════════ */
+body[data-mode="manga"] .novel-reader,
+body[data-mode="manga"] .novel-progress-bar,
+body[data-mode="manga"] #novel-settings {
+    display: none !important;
+}
+
+body[data-mode="novel"] .manga-reader,
+body[data-mode="novel"] #manga-settings {
+    display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+    .settings-panel {
+        width: 100vw;
+        border-radius: 0;
+    }
+
+    .novel-content {
+        padding: 22px 16px 40px;
+    }
+
+    .manga-scrubber-wrap {
+        display: none;
+    }
+}

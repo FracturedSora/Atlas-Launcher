@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Reader — WaifuManga</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/reader.css" />
+    </head>
+    <body class="theme-dark" data-mode="manga">
+
+        <!-- ── Top Bar ─────────────────────────────────────────────────────────── -->
+        <header class="reader-topbar" id="topbar">
+            <div class="topbar-left">
+                <button class="icon-btn" onclick="closeReader()" title="Close reader">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+                <div class="chapter-info">
+                    <span class="series-name" id="series-name">Loading…</span>
+                    <span class="chapter-name" id="chapter-name"></span>
+                </div>
+            </div>
+            <div class="topbar-center" id="topbar-center">
+                <span class="page-indicator" id="page-indicator"></span>
+            </div>
+            <div class="topbar-right">
+                <button class="icon-btn" id="settings-toggle" onclick="toggleSettings()" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- ── Settings Panel ──────────────────────────────────────────────────── -->
+        <div class="settings-panel glass-panel" id="settings-panel">
+            <div class="settings-header">
+                <span>Reader Settings</span>
+                <button class="icon-btn" onclick="toggleSettings()">✕</button>
+            </div>
+
+            <!-- Theme -->
+            <div class="setting-group">
+                <label class="setting-label">Theme</label>
+                <div class="theme-swatches" id="theme-swatches">
+                    <button class="swatch active" data-theme="dark" style="background:#0a0a0f;border-color:#c084fc" onclick="setTheme('dark')">Dark</button>
+                    <button class="swatch" data-theme="sepia" style="background:#1a1510;border-color:#c8a96e" onclick="setTheme('sepia')">Sepia</button>
+                    <button class="swatch" data-theme="amoled" style="background:#000;border-color:#444" onclick="setTheme('amoled')">AMOLED</button>
+                    <button class="swatch" data-theme="parchment" style="background:#1a1610;border-color:#d4a853" onclick="setTheme('parchment')">Parchment</button>
+                    <button class="swatch" data-theme="midnight" style="background:#090918;border-color:#818cf8" onclick="setTheme('midnight')">Midnight</button>
+                </div>
+            </div>
+
+            <!-- Novel-only settings -->
+            <div class="novel-settings" id="novel-settings">
+                <div class="setting-group">
+                    <label class="setting-label">Font Family</label>
+                    <div class="font-options" id="font-options">
+                        <button class="font-opt active" data-font="lora" onclick="setFont('lora')" style="font-family:'Lora',serif">Lora</button>
+                        <button class="font-opt" data-font="crimson" onclick="setFont('crimson')" style="font-family:'Crimson Pro',serif">Crimson</button>
+                        <button class="font-opt" data-font="source-serif" onclick="setFont('source-serif')" style="font-family:'Source Serif 4',serif">Source Serif</button>
+                        <button class="font-opt" data-font="outfit" onclick="setFont('outfit')" style="font-family:'Outfit',sans-serif">Outfit</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">Font Size <span id="font-size-val">18px</span></label>
+                    <input type="range" min="14" max="28" value="18" class="slider" id="font-size-slider" oninput="setFontSize(this.value)" />
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">Line Height <span id="line-height-val">1.8</span></label>
+                    <input type="range" min="14" max="26" value="18" step="1" class="slider" id="line-height-slider" oninput="setLineHeight(this.value)" />
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">Column Width</label>
+                    <div class="width-options">
+                        <button class="width-opt active" data-width="narrow" onclick="setWidth('narrow')">Narrow</button>
+                        <button class="width-opt" data-width="normal" onclick="setWidth('normal')">Normal</button>
+                        <button class="width-opt" data-width="wide" onclick="setWidth('wide')">Wide</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manga-only settings -->
+            <div class="manga-settings" id="manga-settings">
+                <div class="setting-group">
+                    <label class="setting-label">Reading Direction</label>
+                    <div class="dir-options">
+                        <button class="dir-opt active" data-dir="rtl" onclick="setDirection('rtl')">← Right to Left</button>
+                        <button class="dir-opt" data-dir="ltr" onclick="setDirection('ltr')">Left to Right →</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">Page Layout</label>
+                    <div class="layout-options">
+                        <button class="layout-opt active" data-layout="single" onclick="setLayout('single')">Single</button>
+                        <button class="layout-opt" data-layout="double" onclick="setLayout('double')">Double</button>
+                        <button class="layout-opt" data-layout="webtoon" onclick="setLayout('webtoon')">Webtoon</button>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">Fit Mode</label>
+                    <div class="fit-options">
+                        <button class="fit-opt active" data-fit="height" onclick="setFit('height')">Fit Height</button>
+                        <button class="fit-opt" data-fit="width" onclick="setFit('width')">Fit Width</button>
+                        <button class="fit-opt" data-fit="original" onclick="setFit('original')">Original</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="settings-backdrop" id="settings-backdrop" onclick="toggleSettings()"></div>
+
+        <!-- ── Novel Progress Bar ─────────────────────────────────────────────── -->
+        <div class="novel-progress-bar" id="novel-progress-bar">
+            <div class="novel-progress-fill" id="novel-progress-fill"></div>
+        </div>
+
+        <!-- ── Manga Reader ────────────────────────────────────────────────────── -->
+        <div class="manga-reader" id="manga-reader">
+            <div class="tap-zone tap-left" id="tap-left" onclick="mangaNav(-1)"></div>
+            <div class="tap-zone tap-right" id="tap-right" onclick="mangaNav(1)"></div>
+
+            <div class="manga-viewport" id="manga-viewport">
+                <div class="manga-pages" id="manga-pages"></div>
+            </div>
+
+            <div class="webtoon-viewport" id="webtoon-viewport">
+                <div class="webtoon-pages" id="webtoon-pages"></div>
+            </div>
+
+            <div class="manga-bottom-bar" id="manga-bottom-bar">
+                <button class="nav-btn" onclick="mangaNav(-1)" id="btn-prev">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="15,18 9,12 15,6" />
+                    </svg>
+                </button>
+                <div class="manga-scrubber-wrap">
+                    <input type="range" class="manga-scrubber" id="manga-scrubber" min="0" value="0" oninput="scrubTo(this.value)" />
+                </div>
+                <button class="nav-btn" onclick="mangaNav(1)" id="btn-next">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="9,18 15,12 9,6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Novel Reader ────────────────────────────────────────────────────── -->
+        <div class="novel-reader" id="novel-reader">
+            <article class="novel-content" id="novel-content">
+                <div class="novel-loading" id="novel-loading">
+                    <div class="spinner"></div>
+                    <span>Loading chapter…</span>
+                </div>
+            </article>
+            <div class="novel-chapter-nav">
+                <button class="nav-chapter-btn" onclick="changeChapter(-1)">← Previous Chapter</button>
+                <button class="nav-chapter-btn primary" onclick="changeChapter(1)">Next Chapter →</button>
+            </div>
+        </div>
+
+        <!-- ── Loader Overlay ──────────────────────────────────────────────────── -->
+        <div class="reader-loader" id="reader-loader">
+            <div class="loader-inner">
+                <div class="spinner large"></div>
+                <p id="loader-text">Loading…</p>
+            </div>
+        </div>
+
+        <script>
+            // ─── State ──────────────────────────────────────────────────────────────────
+            const params = new URLSearchParams(location.search);
+            const CHAPTER_ID = params.get("id") || "";
+            const SOURCE = params.get("source") || localStorage.getItem("lastSource") || "";
+            const SERIES_ID = params.get("series") || "";
+
+            let readerMode = "manga"; // "manga" | "novel"
+            let allPages = [];
+            let currentPage = 0;
+            let direction = "rtl";
+            let layout = "single";
+            let fitMode = "height";
+            let uiVisible = true;
+            let uiTimeout = null;
+
+            // Novel state
+            let novelText = "";
+            let novelWords = 0;
+
+            // Settings
+            let theme = localStorage.getItem("readerTheme") || "dark";
+            let font = localStorage.getItem("readerFont") || "lora";
+            let fontSize = parseInt(localStorage.getItem("readerFontSize")) || 18;
+            let lineHeight = parseFloat(localStorage.getItem("readerLH")) || 1.8;
+            let colWidth = localStorage.getItem("readerWidth") || "normal";
+
+            // ─── AniList Tracking State ──────────────────────────────────────────────────
+            let _alToken = null;
+            let _alMediaId = 0;
+            let _alProgress = 0;   // user's current saved progress (chapters read)
+            let _chapterNum = 0;   // the chapter number being read right now
+            let _markedRead = false; // only fire the mutation once per chapter session
+
+            // ─── Init ────────────────────────────────────────────────────────────────────
+            applySettings();
+            loadChapter();
+
+            // ─── Load Chapter ────────────────────────────────────────────────────────────
+            async function loadChapter() {
+                showLoader("Loading chapter…");
+                try {
+                    const formatHint = params.get("format") || "";
+                    const src = SOURCE || (await pickSource(formatHint));
+                    if (!src) {
+                        hideLoader();
+                        showError("No source selected.");
+                        return;
+                    }
+                    localStorage.setItem("lastSource", src);
+
+                    const res = await fetch(
+                        `/api/pages?id=${encodeURIComponent(CHAPTER_ID)}&source=${encodeURIComponent(src)}`
+                    );
+                    const json = await res.json();
+
+                    if (!res.ok || !json.success) {
+                        hideLoader();
+                        showError(json.error || "Failed to load chapter.");
+                        return;
+                    }
+
+                    readerMode = json.type || "manga";
+                    document.body.dataset.mode = readerMode;
+
+                    if (readerMode === "manga") {
+                        allPages = json.pages || [];
+                        initManga();
+                    } else {
+                        novelText = json.content || "";
+                        initNovel();
+                    }
+
+                    // Fill series/chapter name from query params
+                    document.getElementById("series-name").textContent = decodeURIComponent(params.get("title") || "Series");
+                    document.getElementById("chapter-name").textContent = decodeURIComponent(params.get("chapter") || "");
+
+                    // Kick off AniList tracking — non-blocking, silently skips if not logged in
+                    initAnilistTracking();
+
+                } catch (e) {
+                    console.error(e);
+                    showError("Error loading chapter: " + e.message);
+                } finally {
+                    hideLoader();
+                }
+            }
+
+            async function pickSource(format) {
+                const ct = localStorage.getItem("contentType") || "sfw";
+                const fmtParam = format ? `&format=${encodeURIComponent(format)}` : "";
+                const res = await fetch(`/api/extensions?contentType=${ct}${fmtParam}`);
+                const json = await res.json();
+                if (json.data?.length) return json.data[0].name;
+                if (fmtParam) {
+                    const fallback = await fetch(`/api/extensions?contentType=${ct}`);
+                    const fb = await fallback.json();
+                    return fb.data?.[0]?.name || null;
+                }
+                return null;
+            }
+
+            // ─── AniList Progress Tracking ───────────────────────────────────────────────
+            async function initAnilistTracking() {
+                try {
+                    // Get token via the manga app's proxy
+                    const meRes = await fetch("/api/anilist/me");
+                    if (!meRes.ok) return;
+                    const me = await meRes.json();
+                    if (!me.success || !me.token) return;
+                    _alToken = me.token;
+
+                    // Parse the chapter number out of the URL param
+                    // Handles: "Chapter 42", "Ch. 42", "42", "42.5"
+                    const rawChapter = decodeURIComponent(params.get("chapter") || "");
+                    const numMatch = rawChapter.match(/(\d+(\.\d+)?)/);
+                    _chapterNum = numMatch ? parseFloat(numMatch[1]) : 0;
+                    if (!_chapterNum) return; // can't track without a chapter number
+
+                    // Pull the series ID from sessionStorage seriesUrl ("/series/12345")
+                    const seriesUrl = sessionStorage.getItem("seriesUrl") || "";
+                    const seriesMatch = seriesUrl.match(/\/series\/(\d+)/);
+                    if (!seriesMatch) return; // extension-sourced, no AniList ID
+                    _alMediaId = parseInt(seriesMatch[1]);
+
+                    // Fetch their current list progress so we only go forward
+                    const gqlRes = await fetch("https://graphql.anilist.co", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "Authorization": `Bearer ${_alToken}`
+                        },
+                        body: JSON.stringify({
+                            query: `
+                                query ($userId: Int, $mediaId: Int) {
+                                    MediaList(userId: $userId, mediaId: $mediaId) {
+                                        progress
+                                    }
+                                }
+                            `,
+                            variables: { userId: parseInt(me.userId), mediaId: _alMediaId }
+                        })
+                    });
+
+                    const gqlData = await gqlRes.json();
+                    _alProgress = gqlData?.data?.MediaList?.progress || 0;
+
+                } catch (e) {
+                    // Silently fail — tracking is a bonus feature, not critical
+                    console.warn("AniList tracking init failed:", e);
+                }
+            }
+
+            async function markChapterRead() {
+                if (_markedRead) return;         // already fired this session
+                if (!_alToken || !_alMediaId) return;  // not logged in / no series
+                if (!_chapterNum) return;        // couldn't parse chapter number
+                if (_chapterNum <= _alProgress) return; // already read — don't go backwards
+
+                _markedRead = true; // set immediately to prevent duplicate calls
+
+                try {
+                    const newProgress = Math.max(_alProgress, Math.floor(_chapterNum));
+
+                    const res = await fetch("https://graphql.anilist.co", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "Authorization": `Bearer ${_alToken}`
+                        },
+                        body: JSON.stringify({
+                            query: `
+                                mutation ($mediaId: Int, $progress: Int) {
+                                    SaveMediaListEntry(mediaId: $mediaId, progress: $progress, status: CURRENT) {
+                                        id progress status
+                                    }
+                                }
+                            `,
+                            variables: { mediaId: _alMediaId, progress: newProgress }
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data?.data?.SaveMediaListEntry) {
+                        _alProgress = data.data.SaveMediaListEntry.progress;
+                        console.log(`✓ AniList progress → Ch. ${_alProgress}`);
+                    } else {
+                        // Mutation failed — allow retry
+                        _markedRead = false;
+                    }
+                } catch (e) {
+                    _markedRead = false; // allow retry on network error
+                    console.warn("AniList mark read failed:", e);
+                }
+            }
+
+            // ─── Manga ───────────────────────────────────────────────────────────────────
+            function initManga() {
+                document.getElementById("manga-reader").style.display = "flex";
+                document.getElementById("novel-reader").style.display = "none";
+                document.getElementById("novel-progress-bar").style.display = "none";
+                document.getElementById("novel-settings").style.display = "none";
+                document.getElementById("manga-settings").style.display = "block";
+
+                const scrubber = document.getElementById("manga-scrubber");
+                scrubber.max = allPages.length - 1;
+                scrubber.value = 0;
+
+                preloadImages();
+                renderMangaPage(0);
+                setupMangaKeyboard();
+                setupHideUI();
+            }
+
+            function preloadImages() {
+                allPages.forEach((url, i) => {
+                    if (i < 5) {
+                        const img = new Image();
+                        img.src = url;
+                    }
+                });
+            }
+
+            function renderMangaPage(idx) {
+                if (idx < 0) idx = 0;
+                if (idx >= allPages.length) idx = allPages.length - 1;
+                currentPage = idx;
+
+                const scrubber = document.getElementById("manga-scrubber");
+                scrubber.value = idx;
+
+                document.getElementById("page-indicator").textContent =
+                    `${idx + 1} / ${allPages.length}`;
+
+                if (layout === "webtoon") {
+                    renderWebtoon();
+                    return;
+                }
+
+                const container = document.getElementById("manga-pages");
+                container.innerHTML = "";
+
+                if (layout === "double") {
+                    const isRtl = direction === "rtl";
+                    const leftIdx = isRtl ? idx + 1 : idx;
+                    const rightIdx = isRtl ? idx : idx + 1;
+                    addPageImg(container, leftIdx, "page-img double");
+                    if (rightIdx < allPages.length)
+                        addPageImg(container, rightIdx, "page-img double");
+                } else {
+                    addPageImg(container, idx, "page-img single");
+                }
+
+                // Preload next few pages
+                for (let i = 1; i <= 3; i++) {
+                    if (idx + i < allPages.length) {
+                        const img = new Image();
+                        img.src = allPages[idx + i];
+                    }
+                }
+            }
+
+            function addPageImg(container, idx, cls) {
+                if (idx < 0 || idx >= allPages.length) return;
+                const wrap = document.createElement("div");
+                wrap.className = "page-wrap";
+
+                const img = document.createElement("img");
+                img.className = cls;
+                img.dataset.fit = fitMode;
+                img.alt = `Page ${idx + 1}`;
+                img.draggable = false;
+
+                img.style.opacity = "0";
+                img.onload = () => {
+                    img.style.transition = "opacity 0.2s";
+                    img.style.opacity = "1";
+                };
+                img.onerror = () => { img.style.opacity = "1"; };
+                img.src = allPages[idx];
+
+                if (img.complete) img.style.opacity = "1";
+
+                wrap.appendChild(img);
+                container.appendChild(wrap);
+            }
+
+            function renderWebtoon() {
+                document.getElementById("manga-viewport").style.display = "none";
+                document.getElementById("webtoon-viewport").style.display = "block";
+
+                const container = document.getElementById("webtoon-pages");
+                if (container.children.length > 0) return; // already rendered
+
+                allPages.forEach((url, i) => {
+                    const img = document.createElement("img");
+                    img.className = "webtoon-img";
+                    img.alt = `Page ${i + 1}`;
+                    img.draggable = false;
+                    img.loading = "lazy";
+                    img.src = url;
+                    container.appendChild(img);
+                });
+            }
+
+            function mangaNav(dir) {
+                const step = layout === "double" ? 2 : 1;
+                const isRtl = direction === "rtl";
+                const move = isRtl ? -dir : dir;
+                const next = currentPage + move * step;
+
+                if (next < 0) {
+                    changeChapter(-1);
+                    return;
+                }
+                if (next >= allPages.length) {
+                    changeChapter(1);
+                    return;
+                }
+
+                renderMangaPage(next);
+                flashUI();
+
+                // ── Mark read when 90% of pages have been reached ──
+                const pct = ((currentPage + 1) / allPages.length) * 100;
+                if (pct >= 90) markChapterRead();
+            }
+
+            function scrubTo(val) {
+                renderMangaPage(parseInt(val));
+
+                // Also check progress when scrubbing
+                const pct = ((currentPage + 1) / allPages.length) * 100;
+                if (pct >= 90) markChapterRead();
+            }
+
+            function setupMangaKeyboard() {
+                document.addEventListener("keydown", (e) => {
+                    if (readerMode !== "manga") return;
+                    const isRtl = direction === "rtl";
+                    if (e.key === "ArrowRight" || e.key === "d") mangaNav(isRtl ? -1 : 1);
+                    if (e.key === "ArrowLeft"  || e.key === "a") mangaNav(isRtl ? 1 : -1);
+                    if (e.key === "f") toggleFullscreen();
+                    if (e.key === "Escape") exitFullscreen();
+                });
+            }
+
+            // ─── Novel ───────────────────────────────────────────────────────────────────
+            function initNovel() {
+                document.getElementById("manga-reader").style.display = "none";
+                document.getElementById("novel-reader").style.display = "block";
+                document.getElementById("novel-progress-bar").style.display = "block";
+                document.getElementById("novel-settings").style.display = "block";
+                document.getElementById("manga-settings").style.display = "none";
+
+                renderNovel(novelText);
+                setupNovelProgress();
+                setupNovelKeyboard();
+            }
+
+            function renderNovel(text) {
+                const content = document.getElementById("novel-content");
+                const loadingEl = document.getElementById("novel-loading");
+                if (loadingEl) loadingEl.remove();
+                content.innerHTML = "";
+
+                const paragraphs = text
+                    .split(/\n{2,}|\n/)
+                    .map((p) => p.trim())
+                    .filter((p) => p.length > 0);
+
+                novelWords = text.split(/\s+/).filter(Boolean).length;
+                const readMinutes = Math.ceil(novelWords / 200);
+
+                const meta = document.createElement("div");
+                meta.className = "novel-meta";
+                meta.innerHTML = `<span>${novelWords.toLocaleString()} words</span><span>~${readMinutes} min read</span>`;
+                content.appendChild(meta);
+
+                paragraphs.forEach((p) => {
+                    const el = document.createElement("p");
+                    if (
+                        /^(Chapter|CHAPTER|Part|PART|Prologue|Epilogue)\s/i.test(p) ||
+                        (p.length < 60 && p === p.toUpperCase())
+                    ) {
+                        el.className = "novel-heading";
+                    } else {
+                        el.className = "novel-para";
+                    }
+                    el.innerHTML = p
+                        .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+                        .replace(/_([^_]+)_/g, "<em>$1</em>");
+                    el.addEventListener("mouseup", onTextSelect);
+                    content.appendChild(el);
+                });
+
+                const end = document.createElement("div");
+                end.className = "novel-end-marker";
+                end.innerHTML = `<span>— End of Chapter —</span>`;
+                content.appendChild(end);
+            }
+
+            function setupNovelProgress() {
+                const fill = document.getElementById("novel-progress-fill");
+                const reader = document.getElementById("novel-reader");
+                const indicator = document.getElementById("page-indicator");
+
+                reader.addEventListener("scroll", () => {
+                    const { scrollTop, scrollHeight, clientHeight } = reader;
+                    const pct =
+                        scrollHeight <= clientHeight
+                            ? 100
+                            : (scrollTop / (scrollHeight - clientHeight)) * 100;
+                    fill.style.width = pct + "%";
+
+                    const wordsRead = Math.round((pct / 100) * novelWords);
+                    const remaining = novelWords - wordsRead;
+                    const minsLeft = Math.max(0, Math.ceil(remaining / 200));
+                    indicator.textContent =
+                        minsLeft > 0 ? `~${minsLeft} min left` : "Finished ✓";
+
+                    // ── Mark read at 90% scroll ──
+                    if (pct >= 90) markChapterRead();
+                });
+            }
+
+            function setupNovelKeyboard() {
+                document.addEventListener("keydown", (e) => {
+                    if (readerMode !== "novel") return;
+                    const reader = document.getElementById("novel-reader");
+                    if (e.key === "ArrowDown" || e.key === "j")
+                        reader.scrollBy({ top: 80, behavior: "smooth" });
+                    if (e.key === "ArrowUp" || e.key === "k")
+                        reader.scrollBy({ top: -80, behavior: "smooth" });
+                    if (e.key === "PageDown" || e.key === " ") {
+                        e.preventDefault();
+                        reader.scrollBy({ top: reader.clientHeight * 0.9, behavior: "smooth" });
+                    }
+                    if (e.key === "PageUp") {
+                        e.preventDefault();
+                        reader.scrollBy({ top: -reader.clientHeight * 0.9, behavior: "smooth" });
+                    }
+                });
+            }
+
+            function onTextSelect() {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed) return;
+                const text = sel.toString().trim();
+                if (!text) return;
+                // Future: definition lookup tooltip here
+            }
+
+            // ─── Settings ────────────────────────────────────────────────────────────────
+            function toggleSettings() {
+                const panel = document.getElementById("settings-panel");
+                const backdrop = document.getElementById("settings-backdrop");
+                const open = panel.classList.toggle("open");
+                backdrop.style.display = open ? "block" : "none";
+            }
+
+            function setTheme(t) {
+                theme = t;
+                localStorage.setItem("readerTheme", t);
+                applySettings();
+                document.querySelectorAll(".swatch").forEach((s) =>
+                    s.classList.toggle("active", s.dataset.theme === t)
+                );
+            }
+
+            function setFont(f) {
+                font = f;
+                localStorage.setItem("readerFont", f);
+                applySettings();
+                document.querySelectorAll(".font-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.font === f)
+                );
+            }
+
+            function setFontSize(v) {
+                fontSize = parseInt(v);
+                localStorage.setItem("readerFontSize", fontSize);
+                document.getElementById("font-size-val").textContent = fontSize + "px";
+                document.getElementById("novel-content").style.fontSize = fontSize + "px";
+            }
+
+            function setLineHeight(v) {
+                const lh = (parseInt(v) / 10).toFixed(1);
+                lineHeight = parseFloat(lh);
+                localStorage.setItem("readerLH", lineHeight);
+                document.getElementById("line-height-val").textContent = lh;
+                document.getElementById("novel-content").style.lineHeight = lh;
+            }
+
+            function setWidth(w) {
+                colWidth = w;
+                localStorage.setItem("readerWidth", w);
+                const widths = { narrow: "520px", normal: "680px", wide: "860px" };
+                document.getElementById("novel-content").style.maxWidth = widths[w];
+                document.querySelectorAll(".width-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.width === w)
+                );
+            }
+
+            function setDirection(d) {
+                direction = d;
+                localStorage.setItem("mangaDir", d);
+                document.querySelectorAll(".dir-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.dir === d)
+                );
+                renderMangaPage(currentPage);
+            }
+
+            function setLayout(l) {
+                layout = l;
+                localStorage.setItem("mangaLayout", l);
+                document.querySelectorAll(".layout-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.layout === l)
+                );
+
+                const viewport = document.getElementById("manga-viewport");
+                const webtoon = document.getElementById("webtoon-viewport");
+                const bottomBar = document.getElementById("manga-bottom-bar");
+                const tapLeft = document.getElementById("tap-left");
+                const tapRight = document.getElementById("tap-right");
+
+                if (l === "webtoon") {
+                    viewport.style.display = "none";
+                    webtoon.style.display = "block";
+                    bottomBar.style.display = "none";
+                    tapLeft.style.display = "none";
+                    tapRight.style.display = "none";
+                    renderWebtoon();
+                } else {
+                    viewport.style.display = "flex";
+                    webtoon.style.display = "none";
+                    bottomBar.style.display = "flex";
+                    tapLeft.style.display = "block";
+                    tapRight.style.display = "block";
+                    renderMangaPage(currentPage);
+                }
+            }
+
+            function setFit(f) {
+                fitMode = f;
+                localStorage.setItem("mangaFit", f);
+                document.querySelectorAll(".fit-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.fit === f)
+                );
+                document.querySelectorAll(".page-img").forEach((img) => (img.dataset.fit = f));
+                renderMangaPage(currentPage);
+            }
+
+            function applySettings() {
+                document.body.className = `theme-${theme}`;
+                document.body.dataset.mode = readerMode;
+
+                const fontMap = {
+                    lora: "'Lora', serif",
+                    crimson: "'Crimson Pro', serif",
+                    "source-serif": "'Source Serif 4', serif",
+                    outfit: "'Outfit', sans-serif",
+                };
+
+                const root = document.documentElement;
+                root.style.setProperty("--novel-font", fontMap[font] || fontMap["lora"]);
+                root.style.setProperty("--novel-size", fontSize + "px");
+                root.style.setProperty("--novel-lh", lineHeight);
+
+                const widths = { narrow: "520px", normal: "680px", wide: "860px" };
+                root.style.setProperty("--novel-width", widths[colWidth] || "680px");
+
+                direction = localStorage.getItem("mangaDir") || "rtl";
+                layout = localStorage.getItem("mangaLayout") || "single";
+                fitMode = localStorage.getItem("mangaFit") || "height";
+
+                document.querySelectorAll(".swatch").forEach((s) =>
+                    s.classList.toggle("active", s.dataset.theme === theme)
+                );
+                document.querySelectorAll(".font-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.font === font)
+                );
+                document.querySelectorAll(".dir-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.dir === direction)
+                );
+                document.querySelectorAll(".layout-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.layout === layout)
+                );
+                document.querySelectorAll(".fit-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.fit === fitMode)
+                );
+                document.querySelectorAll(".width-opt").forEach((b) =>
+                    b.classList.toggle("active", b.dataset.width === colWidth)
+                );
+
+                const fsSel = document.getElementById("font-size-slider");
+                const lhSel = document.getElementById("line-height-slider");
+                if (fsSel) fsSel.value = fontSize;
+                if (lhSel) lhSel.value = Math.round(lineHeight * 10);
+                const fsVal = document.getElementById("font-size-val");
+                const lhVal = document.getElementById("line-height-val");
+                if (fsVal) fsVal.textContent = fontSize + "px";
+                if (lhVal) lhVal.textContent = lineHeight.toFixed(1);
+            }
+
+            // ─── UI auto-hide (manga) ────────────────────────────────────────────────────
+            function setupHideUI() {
+                document.addEventListener("mousemove", flashUI);
+                document.addEventListener("touchstart", flashUI);
+            }
+
+            function flashUI() {
+                const topbar = document.getElementById("topbar");
+                const botbar = document.getElementById("manga-bottom-bar");
+                topbar.classList.remove("hidden");
+                if (botbar) botbar.classList.remove("hidden");
+                clearTimeout(uiTimeout);
+                uiTimeout = setTimeout(() => {
+                    if (
+                        readerMode === "manga" &&
+                        !document.getElementById("settings-panel").classList.contains("open")
+                    ) {
+                        topbar.classList.add("hidden");
+                        if (botbar) botbar.classList.add("hidden");
+                    }
+                }, 3000);
+            }
+
+            // ─── Chapter navigation ───────────────────────────────────────────────────────
+            function changeChapter(dir) {
+                const list = JSON.parse(sessionStorage.getItem("chapterList") || "[]");
+                const currentIdx = list.findIndex((c) => c.id === CHAPTER_ID);
+                if (currentIdx === -1) return;
+                const nextChapter = list[currentIdx + dir];
+                if (!nextChapter) return;
+                const src = SOURCE || localStorage.getItem("lastSource") || "";
+                window.location.href = `/read?id=${encodeURIComponent(nextChapter.id)}&source=${encodeURIComponent(src)}&title=${encodeURIComponent(params.get("title") || "")}&chapter=${encodeURIComponent(nextChapter.title || "")}`;
+            }
+
+            // ─── Close reader ─────────────────────────────────────────────────────────────
+            function closeReader() {
+                const seriesUrl = sessionStorage.getItem("seriesUrl");
+                if (seriesUrl) {
+                    window.location.href = seriesUrl;
+                } else if (SERIES_ID) {
+                    window.location.href = "/series/" + encodeURIComponent(SERIES_ID);
+                } else {
+                    history.back();
+                }
+            }
+
+            // ─── Fullscreen ───────────────────────────────────────────────────────────────
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+                else document.exitFullscreen();
+            }
+            function exitFullscreen() {
+                if (document.fullscreenElement) document.exitFullscreen();
+            }
+
+            // ─── Loader / Error ───────────────────────────────────────────────────────────
+            function showLoader(msg) {
+                document.getElementById("loader-text").textContent = msg || "Loading…";
+                document.getElementById("reader-loader").style.display = "flex";
+            }
+            function hideLoader() {
+                document.getElementById("reader-loader").style.display = "none";
+            }
+            function showError(msg) {
+                document.getElementById("manga-reader").style.display = "none";
+                document.getElementById("novel-reader").style.display = "none";
+                const err = document.createElement("div");
+                err.className = "reader-error";
+                err.innerHTML = `<div class="error-icon">⚠</div><p>${msg}</p><a href="javascript:closeReader()" class="back-link">← Go Back</a>`;
+                document.body.appendChild(err);
+            }
+        </script>
+    </body>
+</html>

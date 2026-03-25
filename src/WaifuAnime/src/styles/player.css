@@ -1,0 +1,337 @@
+/* ══════════════════════════════════════════════════════════════════════════════
+   ATLAS PLAYER — Netflix-accurate
+══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ─────────────────────────────────────────────────────────────── */
+.player-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: #000;
+  display: none;
+  font-family: 'Inter', 'Netflix Sans', sans-serif;
+}
+.player-overlay.open         { display: block; cursor: none; }
+.player-overlay.controls-on  { cursor: default; }
+
+/* Video.js fills everything, hide all default chrome */
+#atlas-player.video-js {
+  position: absolute; inset: 0;
+  width: 100% !important; height: 100% !important;
+}
+/* Cover mode — fills the screen without black bars on any resolution */
+#atlas-player.video-js video {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.player-overlay .vjs-control-bar,
+.player-overlay .vjs-big-play-button,
+.player-overlay .vjs-loading-spinner,
+.player-overlay .vjs-error-display { display: none !important; }
+
+/* ── Top-left metadata (show/episode title) ──────────────────────────────── */
+.player-topbar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+  padding: 28px 56px 120px 28px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, transparent 100%);
+  opacity: 0; pointer-events: none; transition: opacity 0.22s;
+  display: flex; align-items: flex-start; gap: 0;
+}
+.player-overlay.controls-on .player-topbar { opacity: 1; pointer-events: auto; }
+
+/* Netflix top-left: show title + episode info, no back button in view */
+.player-topbar-meta { min-width: 0; }
+.player-show-title {
+  font-size: 1.4rem; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.player-ep-title {
+  font-size: 1rem; color: rgba(255,255,255,0.85); margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Back arrow — Netflix puts it top-left, outside the meta */
+.player-back {
+  background: none; border: none; cursor: pointer;
+  color: #fff; padding: 4px 16px 4px 0;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.85; transition: opacity 0.15s; flex-shrink: 0; margin-top: 4px;
+}
+.player-back:hover { opacity: 1; }
+.player-back svg { width: 28px; height: 28px; }
+
+/* ── Skip buttons — always on top, never tied to controls-on ────────────── */
+.player-skip-btn {
+  position: fixed; /* fixed so it's never clipped by any parent */
+  right: 56px;
+  z-index: 950; /* above the overlay itself */
+  background: rgba(20,20,20,0.92);
+  border: 2px solid rgba(255,255,255,0.85);
+  color: #fff;
+  font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700;
+  padding: 12px 26px; border-radius: 4px;
+  cursor: pointer;
+  display: none; /* hidden until .visible */
+  align-items: center; gap: 9px;
+  transition: background 0.15s, border-color 0.15s;
+  pointer-events: auto;
+}
+.player-skip-btn:hover { background: rgba(255,255,255,0.15); border-color: #fff; }
+.player-skip-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+/* .visible overrides display:none — !important needed to beat specificity */
+.player-skip-btn.visible { display: flex !important; }
+#player-skip-intro { bottom: 140px; }
+#player-skip-outro { bottom: 84px; }
+
+/* ── Bottom gradient + shelf ─────────────────────────────────────────────── */
+.player-shelf {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  padding: 0 56px 24px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+  opacity: 0; pointer-events: none; transition: opacity 0.22s;
+}
+.player-overlay.controls-on .player-shelf { opacity: 1; pointer-events: auto; }
+
+/* ── Progress / scrubber ─────────────────────────────────────────────────── */
+.player-scrubber {
+  position: relative;
+  height: 20px; /* tall hit area */
+  margin-bottom: 10px; cursor: pointer;
+  display: flex; align-items: center;
+}
+/* The actual bar sits vertically centred in the hit area */
+.player-scrubber-track {
+  position: absolute; left: 0; right: 0;
+  height: 4px; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.25); border-radius: 2px;
+  overflow: visible;
+  transition: height 0.15s, transform 0.15s;
+}
+.player-scrubber:hover .player-scrubber-track { height: 6px; }
+
+.player-scrubber-fill {
+  position: absolute; left: 0; top: 0; height: 100%; width: 0%;
+  background: #e50914; border-radius: 2px; pointer-events: none;
+}
+
+/* Intro / outro highlight segments on the bar */
+.player-skip-marker {
+  position: absolute; top: 0; height: 100%;
+  border-radius: 1px; pointer-events: none;
+  z-index: 1;
+}
+.player-skip-marker.intro { background: rgba(251,191,36,0.85); }  /* amber — opening */
+.player-skip-marker.outro { background: rgba(167,139,250,0.85); } /* purple — ending */
+
+.player-scrubber-thumb {
+  position: absolute; top: 50%;
+  width: 14px; height: 14px; margin-top: -7px;
+  background: #fff; border-radius: 50%;
+  transform: translateX(-50%) scale(0);
+  transition: transform 0.15s; pointer-events: none; left: 0%;
+  z-index: 2;
+}
+.player-scrubber:hover .player-scrubber-thumb { transform: translateX(-50%) scale(1); }
+
+/* ── Controls row — exactly like Netflix ────────────────────────────────── */
+.player-controls {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.player-ctrl-left, .player-ctrl-right {
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* Netflix-style time display in the middle-left area */
+.player-time-display {
+  font-size: 0.82rem; color: rgba(255,255,255,0.85);
+  font-weight: 500; letter-spacing: 0.02em;
+  padding: 0 8px; white-space: nowrap;
+  /* also shows show + ep title in the control row, exactly like Netflix */
+}
+.player-ctrl-title {
+  font-size: 0.82rem; color: rgba(255,255,255,0.85);
+  font-weight: 500; padding: 0 8px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; max-width: 300px;
+}
+
+/* Icon buttons */
+.pctrl {
+  background: none; border: none; cursor: pointer;
+  color: #fff; padding: 8px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.15s; flex-shrink: 0;
+}
+.pctrl:hover { color: rgba(255,255,255,0.7); }
+.pctrl svg   { display: block; }
+.pctrl-lg svg { width: 26px; height: 26px; }
+.pctrl-md svg { width: 22px; height: 22px; }
+.pctrl-sm svg { width: 18px; height: 18px; }
+
+/* Volume row */
+.pctrl-vol-group { display: flex; align-items: center; gap: 0; }
+.pctrl-vol-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 0px; height: 4px;
+  background: rgba(255,255,255,0.35); border-radius: 2px;
+  outline: none; cursor: pointer;
+  transition: width 0.2s, opacity 0.2s;
+  opacity: 0; overflow: hidden;
+}
+.pctrl-vol-group:hover .pctrl-vol-slider { width: 72px; opacity: 1; }
+.pctrl-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: #fff; border-radius: 50%;
+}
+
+/* ── Quality dropdown ────────────────────────────────────────────────────── */
+.player-quality-wrap {
+  position: relative; display: flex; align-items: center;
+}
+.player-quality-btn {
+  background: none; border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; border-radius: 3px;
+  font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 700;
+  padding: 4px 10px; cursor: pointer; letter-spacing: 0.05em;
+  transition: border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.player-quality-btn:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+.player-quality-menu {
+  position: absolute; bottom: calc(100% + 8px); right: 0;
+  background: rgba(20,20,20,0.97);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px; min-width: 100px;
+  display: none; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.8);
+  z-index: 40;
+}
+.player-quality-menu.open { display: flex; }
+
+.player-quality-opt {
+  padding: 9px 16px; cursor: pointer;
+  font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.7);
+  transition: background 0.12s, color 0.12s;
+  text-align: center;
+}
+.player-quality-opt:hover  { background: rgba(255,255,255,0.08); color: #fff; }
+.player-quality-opt.active { color: #fff; font-weight: 700; }
+.player-quality-opt.active::before { content: "✓ "; }
+
+/* ── Episodes panel — slides in from right ───────────────────────────────── */
+.player-eps-panel {
+  position: absolute; top: 0; right: 0; bottom: 0; z-index: 25;
+  width: 360px;
+  background: rgba(10,10,10,0.97);
+  border-left: 1px solid rgba(255,255,255,0.07);
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+.player-eps-panel.open { transform: translateX(0); }
+
+.player-eps-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 16px 16px;
+  font-size: 1rem; font-weight: 700; color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.player-eps-list {
+  flex: 1; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent;
+  padding: 8px 0;
+}
+
+.player-ep-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; cursor: pointer;
+  transition: background 0.15s;
+}
+.player-ep-item:hover   { background: rgba(255,255,255,0.06); }
+.player-ep-item.playing { background: rgba(229,9,20,0.1); }
+
+.player-ep-item-num {
+  font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.3);
+  width: 28px; text-align: center; flex-shrink: 0;
+}
+.player-ep-item.playing .player-ep-item-num { color: #e50914; }
+
+.player-ep-item-thumb {
+  width: 82px; flex-shrink: 0; aspect-ratio: 16/9;
+  border-radius: 3px; overflow: hidden; background: #1a1a1a;
+}
+.player-ep-item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.player-ep-item-info { min-width: 0; }
+.player-ep-item-title {
+  font-size: 0.82rem; font-weight: 600; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.player-ep-item.playing .player-ep-item-title { color: #e50914; }
+.player-ep-item-sub {
+  font-size: 0.68rem; color: rgba(255,255,255,0.4); margin-top: 3px;
+}
+
+/* ── Sub/Dub toggle ──────────────────────────────────────────────────────── */
+.player-lang-group {
+  display: flex; background: rgba(255,255,255,0.1);
+  border-radius: 3px; overflow: hidden;
+}
+.player-lang-btn {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.6);
+  font-family: inherit; font-size: 0.7rem; font-weight: 700;
+  padding: 5px 11px; transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.05em;
+}
+.player-lang-btn:hover  { color: #fff; }
+.player-lang-btn.active { background: #fff; color: #000; }
+
+/* Fullscreen — our overlay is the fullscreen element so z-index stacking is maintained.
+   The shelf/topbar use controls-on class, which works identically in fullscreen. */
+:-webkit-full-screen .player-shelf  { z-index: 20 !important; }
+:-webkit-full-screen .player-topbar { z-index: 20 !important; }
+:fullscreen .player-shelf           { z-index: 20 !important; }
+:fullscreen .player-topbar          { z-index: 20 !important; }
+/* Ensure the overlay itself can be the fullscreen container */
+.player-overlay { -webkit-overflow-scrolling: touch; }
+
+/* ── Loading spinner ─────────────────────────────────────────────────────── */
+.player-spinner-wrap {
+  position: absolute; inset: 0; z-index: 8;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.player-spinner {
+  width: 56px; height: 56px;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: pSpin 0.75s linear infinite;
+  display: none;
+}
+.player-overlay.loading .player-spinner { display: block; }
+@keyframes pSpin { to { transform: rotate(360deg); } }
+
+/* ── Error ───────────────────────────────────────────────────────────────── */
+.player-error {
+  position: absolute; inset: 0; z-index: 9;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 24px; text-align: center; color: #fff;
+}
+.player-overlay.errored .player-error { display: flex; }
+.player-error svg { width: 56px; height: 56px; color: rgba(255,255,255,0.3); }
+.player-error h3  { font-size: 1.2rem; font-weight: 700; }
+.player-error p   { font-size: 0.84rem; color: rgba(255,255,255,0.55); max-width: 400px; line-height: 1.65; }
+.player-retry {
+  background: #fff; color: #000; border: none; border-radius: 4px;
+  padding: 11px 28px; font-family: inherit;
+  font-size: 0.9rem; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+}
+.player-retry:hover { background: rgba(255,255,255,0.85); }

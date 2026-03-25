@@ -1,0 +1,22 @@
+{
+  "name": "waifuanime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/static": "^9.0.0",
+    "axios": "^1.13.6",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.8.2",
+    "node-html-parser": "^7.1.0",
+    "video.js": "^8.23.7"
+  }
+}

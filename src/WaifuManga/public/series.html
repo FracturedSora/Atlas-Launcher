@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Series — WaifuManga</title>
+        <link rel="stylesheet" href="/series.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+    </head>
+    <body>
+        <header class="glass-header" id="series-header">
+            <a href="/" class="back-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                Back
+            </a>
+        </header>
+
+        <div class="banner-section">
+            <div class="banner-bg" id="banner-bg"></div>
+            <div class="banner-overlay"></div>
+        </div>
+
+        <main class="series-layout">
+            <aside class="series-aside">
+                <div class="cover-wrapper">
+                    <img id="cover-img" src="" alt="Cover" class="cover-img" />
+                    <div class="cover-glow" id="cover-glow"></div>
+                </div>
+                <div class="quick-stats glass-panel" id="quick-stats">
+                    <div class="stat-row" id="stat-status"></div>
+                    <div class="stat-row" id="stat-chapters"></div>
+                    <div class="stat-row" id="stat-volumes"></div>
+                    <div class="stat-row" id="stat-year"></div>
+                    <div class="stat-row" id="stat-format"></div>
+                    <div class="stat-row" id="stat-country"></div>
+                </div>
+                <div class="aside-tags glass-panel">
+                    <div class="source-panel-title">Genres & Tags</div>
+                    <div class="tag-cloud" id="tag-cloud"></div>
+                </div>
+                <button class="primary-btn read-btn" id="read-btn">▶ Start Reading</button>
+                <button class="secondary-btn list-btn" id="list-btn">+ Add to List</button>
+            </aside>
+
+            <section class="series-info">
+                <div class="title-block">
+                    <div class="series-badges" id="series-badges"></div>
+                    <div class="title-score-row">
+                        <h1 class="series-title" id="series-title">Loading...</h1>
+                        <div class="score-badge" id="score-badge">
+                            <span class="score-star">★</span>
+                            <span id="score-val">—</span>
+                        </div>
+                    </div>
+                    <p class="series-alt" id="series-alt"></p>
+                    <p class="score-sub" id="score-count"></p>
+                </div>
+
+                <div class="section-block">
+                    <h4 class="block-label">Synopsis</h4>
+                    <p class="synopsis-preview" id="synopsis-preview">Loading synopsis...</p>
+                    <div class="synopsis-accordion" id="synopsis-accordion">
+                        <p class="synopsis-rest" id="synopsis-rest"></p>
+                    </div>
+                    <button class="expand-btn" id="expand-btn" onclick="expandSynopsis()">Read More ▾</button>
+                </div>
+
+                <div class="section-block" id="chapters-section">
+                    <div class="chapters-header-bar">
+                        <div class="chapters-label">
+                            <span class="block-label-text">Chapters</span>
+                            <span class="chapter-count-badge" id="chapter-count-badge"></span>
+                        </div>
+                        <input type="text" id="chapter-filter" placeholder="Search chapters…" class="chapter-filter-input" oninput="onChapterSearch()" />
+                        <div class="source-picker" id="source-picker">
+                            <div class="source-selected" id="source-selected" onclick="toggleSourceDropdown()">
+                                <img id="source-icon" src="" alt="" class="source-icon" />
+                                <span id="source-name">Source</span>
+                                <span class="chevron">▾</span>
+                            </div>
+                            <div class="source-dropdown" id="source-dropdown"></div>
+                        </div>
+                    </div>
+                    <div id="hide-read-wrap" style="display:none; padding: 6px 0 2px;">
+                        <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:0.75rem;font-weight:500;color:rgba(240,236,228,0.45);letter-spacing:0.04em;user-select:none;">
+                            <input type="checkbox" id="hide-read-toggle" onchange="onHideReadToggle()" style="appearance:none;width:14px;height:14px;border:1px solid rgba(201,168,76,0.3);border-radius:3px;background:rgba(255,255,255,0.03);cursor:pointer;position:relative;flex-shrink:0;transition:all 0.15s;" />
+                            Hide read chapters
+                        </label>
+                    </div>
+                    <div class="chapters-list" id="chapters-list">
+                        <div class="loader-row"><div class="spinner"></div><span>Select a source to load chapters...</span></div>
+                    </div>
+                    <div class="chapter-pagination" id="chapter-pagination"></div>
+                </div>
+
+                <div class="section-block" id="relations-block">
+                    <h4 class="block-label">Related</h4>
+                    <div class="relations-grid" id="relations-grid"></div>
+                </div>
+            </section>
+
+            <aside class="series-aside-right">
+                <div class="aside-chars glass-panel" id="chars-block">
+                    <div class="source-panel-title">Characters</div>
+                    <div class="char-grid" id="char-grid"></div>
+                </div>
+                <div class="aside-chars glass-panel" id="staff-block">
+                    <div class="source-panel-title">Staff</div>
+                    <div class="staff-grid" id="staff-grid"></div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- List Edit Modal -->
+        <div id="list-modal" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);">
+            <div style="background:#0f0f11;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:28px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:18px;box-shadow:0 24px 64px rgba(0,0,0,0.8);font-family:'DM Sans',system-ui,sans-serif;margin:16px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span id="modal-title" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;font-style:italic;color:#f0ece4;">Add to List</span>
+                    <button onclick="closeListModal()" style="background:none;border:none;color:rgba(240,236,228,0.4);font-size:1.2rem;cursor:pointer;line-height:1;padding:4px;">✕</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                    <label style="font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.35);">Status</label>
+                    <select id="modal-status" style="padding:9px 13px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#f0ece4;font-family:'DM Sans',system-ui,sans-serif;font-size:0.85rem;outline:none;cursor:pointer;">
+                        <option value="CURRENT">Reading</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="PAUSED">Paused</option>
+                        <option value="DROPPED">Dropped</option>
+                        <option value="PLANNING">Plan to Read</option>
+                        <option value="REPEATING">Rereading</option>
+                    </select>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                    <label id="modal-progress-label" style="font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.35);">Chapter Progress</label>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <button onclick="stepProgress(-1)" style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f0ece4;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">−</button>
+                        <input id="modal-progress" type="number" min="0" value="0" style="flex:1;padding:9px 13px;text-align:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#f0ece4;font-family:'DM Sans',system-ui,sans-serif;font-size:0.9rem;outline:none;" />
+                        <button onclick="stepProgress(1)" style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#f0ece4;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">+</button>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                    <label style="font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,236,228,0.35);">Score (0–10)</label>
+                    <input id="modal-score" type="number" min="0" max="10" step="0.5" value="0" style="padding:9px 13px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#f0ece4;font-family:'DM Sans',system-ui,sans-serif;font-size:0.9rem;outline:none;" />
+                </div>
+                <div style="display:flex;gap:9px;margin-top:4px;">
+                    <button id="modal-save-btn" onclick="saveListEntry()" style="flex:1;padding:11px;border-radius:7px;border:none;background:#c9a84c;color:#0a0a0b;font-family:'DM Sans',system-ui,sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s;">Add to List</button>
+                    <button id="modal-remove-btn" onclick="removeListEntry()" style="display:none;padding:11px 16px;border-radius:7px;background:rgba(139,38,53,0.15);border:1px solid rgba(139,38,53,0.35);color:#e87b8b;font-family:'DM Sans',system-ui,sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:all 0.2s;">Remove</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script>
+            // ─── Config ────────────────────────────────────────────────────────────
+            const SERIES_ID = window.location.pathname.split("/").filter(Boolean).pop() || "";
+
+            let allChapters = [];
+            let filteredChapters = [];
+            let activeScraper = null;
+            let currentPage = 1;
+            const PAGE_SIZE = 10;
+
+            const _urlParams = new URLSearchParams(window.location.search);
+            const _sourceParam = _urlParams.get("source") || "";
+
+            // ─── AniList State ─────────────────────────────────────────────────────
+            let _anilistEntry = null;
+            let _anilistToken = null;
+            let _anilistUserId = null;
+            let _hideRead = false;
+
+            // ─── Cache ─────────────────────────────────────────────────────────────
+            const SERIES_CACHE_TTL = {
+                seriesData:  60 * 60 * 1000,
+                anilistMe:   30 * 60 * 1000,
+                listEntry:    5 * 60 * 1000,
+            };
+
+            const _memCache = {};
+
+            function sCache(key, data, ttl) {
+                const entry = { data, expires: Date.now() + ttl };
+                _memCache[key] = entry;
+                try { sessionStorage.setItem("sc_" + key, JSON.stringify(entry)); } catch (_) {}
+            }
+
+            function gCache(key) {
+                if (_memCache[key] && Date.now() < _memCache[key].expires)
+                    return _memCache[key].data;
+                try {
+                    const raw = sessionStorage.getItem("sc_" + key);
+                    if (raw) {
+                        const entry = JSON.parse(raw);
+                        if (Date.now() < entry.expires) { _memCache[key] = entry; return entry.data; }
+                        sessionStorage.removeItem("sc_" + key);
+                    }
+                } catch (_) {}
+                return null;
+            }
+
+            function dCache(key) {
+                delete _memCache[key];
+                try { sessionStorage.removeItem("sc_" + key); } catch (_) {}
+            }
+
+            // Read entries written by app.js prefetch (ac_ prefix)
+            function getSessionRaw(key) {
+                try {
+                    const raw = sessionStorage.getItem("ac_" + key);
+                    if (!raw) return null;
+                    const entry = JSON.parse(raw);
+                    if (Date.now() < entry.expires && entry.data?.id) return entry.data;
+                    sessionStorage.removeItem("ac_" + key);
+                } catch (_) {}
+                return null;
+            }
+
+            // ─── AniList full fields query ─────────────────────────────────────────
+            const ANILIST_FIELDS = `
+                id
+                title { english romaji native }
+                description
+                status
+                format
+                chapters
+                volumes
+                averageScore
+                meanScore
+                popularity
+                isAdult
+                countryOfOrigin
+                startDate { year month day }
+                coverImage { extraLarge large medium color }
+                bannerImage
+                genres
+                synonyms
+                tags { name category rank isMediaSpoiler }
+                characters(sort: ROLE, perPage: 10) {
+                    edges { role node { name { full } image { medium } } }
+                }
+                staff(perPage: 8) {
+                    edges { role node { name { full } image { medium } } }
+                }
+                relations {
+                    edges {
+                        relationType
+                        node { id title { english romaji } format coverImage { medium } }
+                    }
+                }
+            `;
+
+            async function fetchAnilistByTitle(title) {
+                try {
+                    const res = await fetch("https://graphql.anilist.co", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                        body: JSON.stringify({
+                            query: `query ($search: String) { Media(search: $search, type: MANGA) { ${ANILIST_FIELDS} } }`,
+                            variables: { search: title }
+                        })
+                    });
+                    if (!res.ok) return null;
+                    const json = await res.json();
+                    const media = json?.data?.Media;
+                    return (media?.id && media?.title) ? media : null;
+                } catch (_) { return null; }
+            }
+
+            // ─── Series Load ───────────────────────────────────────────────────────
+            async function loadSeries(retries = 3) {
+                if (!SERIES_ID) {
+                    document.getElementById("series-title").textContent = "Series not found.";
+                    return;
+                }
+                try {
+                    // ── Extension-sourced series ──────────────────────────────────────
+                    // The SERIES_ID is a scraper slug, not an AniList ID.
+                    // We fetch the ext data for the title, then look it up on AniList
+                    // for clean English metadata. AniList data wins everywhere except chapters.
+                    if (_sourceParam) {
+                        const extKey = `ext_${SERIES_ID}_${_sourceParam}`;
+                        const extCached = gCache(extKey);
+                        if (extCached) { renderSeries(extCached); return; }
+
+                        // 1. Get extension data (for the real title string + cover fallback)
+                        const extRes = await fetch(`/api/series-ext?id=${encodeURIComponent(SERIES_ID)}&source=${encodeURIComponent(_sourceParam)}`);
+                        if (!extRes.ok) throw new Error(`Extension API returned ${extRes.status}`);
+                        const extJson = await extRes.json();
+                        if (!extJson.data) throw new Error("No data from extension");
+                        const extData = extJson.data;
+
+                        // 2. Use the clean title from ext data to look up AniList
+                        const rawTitle = extData.title || extData.name || "";
+                        const anilistData = rawTitle ? await fetchAnilistByTitle(rawTitle) : null;
+
+                        // 3. Build merged object — AniList metadata, ext as fallback
+                        let merged;
+                        if (anilistData) {
+                            merged = {
+                                ...anilistData,
+                                // Use AniList cover unless it's missing
+                                coverImage: anilistData.coverImage?.extraLarge
+                                    ? anilistData.coverImage
+                                    : { extraLarge: extData.thumb || extData.image || "", large: extData.thumb || extData.image || "", color: null }
+                            };
+                        } else {
+                            // AniList lookup failed — use ext data with cleaned up shape
+                            merged = {
+                                id: null,
+                                title: { english: rawTitle || SERIES_ID, romaji: rawTitle || SERIES_ID, native: null },
+                                coverImage: { extraLarge: extData.thumb || extData.image || "", large: extData.thumb || extData.image || "", color: null },
+                                bannerImage: null,
+                                description: extData.description || "",
+                                status: extData.status || null,
+                                format: "MANGA",
+                                chapters: extData.chapters || null,
+                                volumes: null,
+                                averageScore: null,
+                                meanScore: null,
+                                popularity: null,
+                                isAdult: false,
+                                countryOfOrigin: null,
+                                startDate: null,
+                                genres: extData.genres || [],
+                                synonyms: [],
+                                tags: [],
+                                characters: { edges: [] },
+                                staff: { edges: [] },
+                                relations: { edges: [] }
+                            };
+                        }
+
+                        // Cache only after we have the full resolved data
+                        sCache(extKey, merged, SERIES_CACHE_TTL.seriesData);
+                        renderSeries(merged);
+                        return;
+                    }
+
+                    // ── AniList ID series ─────────────────────────────────────────────
+                    // Check sc_ (written by this page) then ac_ (prefetched by app.js)
+                    const cacheKey = `series_${SERIES_ID}`;
+                    // getSessionRaw prepends "ac_" internally, so pass just the base key
+                    const cached = gCache(cacheKey) || getSessionRaw(`series_${SERIES_ID}`);
+                    if (cached) { renderSeries(cached); return; }
+
+                    const res = await fetch(`/api/series/${encodeURIComponent(SERIES_ID)}`);
+                    if (res.status === 429 && retries > 0) {
+                        document.getElementById("series-title").textContent = "Rate limited — retrying…";
+                        await new Promise((r) => setTimeout(r, 2000));
+                        return loadSeries(retries - 1);
+                    }
+                    if (!res.ok) throw new Error(`API returned ${res.status}`);
+                    const json = await res.json();
+                    const data = json.data;
+                    if (!data) throw new Error("No data returned");
+                    // Only cache once fully loaded
+                    sCache(cacheKey, data, SERIES_CACHE_TTL.seriesData);
+                    renderSeries(data);
+                } catch (e) {
+                    console.error("Series load error:", e);
+                    document.getElementById("series-title").textContent = "Failed to load series. Try refreshing.";
+                }
+            }
+
+            function renderSeries(d) {
+                // Normalize banner
+                const coverForBanner = (typeof d.coverImage === "object" && d.coverImage !== null)
+                    ? d.coverImage?.extraLarge
+                    : d.coverImage || d.cover || d.image || d.thumb || "";
+                const banner = d.bannerImage || coverForBanner;
+                if (banner) {
+                    document.getElementById("banner-bg").style.backgroundImage =
+                        `url('/api/proxy?url=${encodeURIComponent(banner)}')`;
+                }
+
+                // Normalize coverImage — could be {extraLarge,large,color} or a plain string URL
+                const coverObj = (typeof d.coverImage === "object" && d.coverImage !== null)
+                    ? d.coverImage
+                    : { extraLarge: d.coverImage || d.cover || d.image || d.thumb || "", large: d.coverImage || "", color: null };
+                const coverImg = document.getElementById("cover-img");
+                coverImg.src = (coverObj.extraLarge || coverObj.large)
+                    ? `/api/proxy?url=${encodeURIComponent(coverObj.extraLarge || coverObj.large)}`
+                    : "";
+                if (coverObj.color) {
+                    document.getElementById("cover-glow").style.boxShadow = `0 20px 60px ${coverObj.color}88`;
+                    document.documentElement.style.setProperty("--series-accent", coverObj.color);
+                }
+
+                // Normalize title — could be an object {english,romaji,native} or a plain string
+                const titleObj = (typeof d.title === "object" && d.title !== null)
+                    ? d.title
+                    : { english: d.title || "", romaji: d.title || "", native: null };
+                const title = titleObj.english || titleObj.romaji || titleObj.native || "Unknown Title";
+                document.title = `${title} — WaifuManga`;
+                document.getElementById("series-title").textContent = title;
+                const alts = [titleObj.romaji, titleObj.native, ...(d.synonyms || [])]
+                    .filter((s) => s && s !== title);
+                document.getElementById("series-alt").textContent = alts.slice(0, 3).join(" / ");
+
+                const badgesEl = document.getElementById("series-badges");
+                badgesEl.innerHTML = d.isAdult ? `<span class="badge badge-nsfw">NSFW</span>` : "";
+
+                const score = d.averageScore || d.meanScore;
+                if (score) {
+                    document.getElementById("score-val").textContent = (score / 10).toFixed(1);
+                    document.getElementById("score-count").textContent = `${d.popularity?.toLocaleString()} users`;
+                }
+
+                const statRows = [
+                    ["stat-status",   "Status",    fmtStatus(d.status)],
+                    ["stat-chapters", "Chapters",  d.chapters || "Ongoing"],
+                    ["stat-volumes",  "Volumes",   d.volumes || "—"],
+                    ["stat-year",     "Published", fmtDate(d.startDate)],
+                    ["stat-format",   "Format",    d.format?.replace(/_/g, " ") || "—"],
+                    ["stat-country",  "Origin",    fmtCountry(d.countryOfOrigin)],
+                ];
+                window._seriesFormat = d.format || "MANGA";
+                window._totalChapters = d.chapters || 0;
+                initSourcePicker();
+                statRows.forEach(([id, label, val]) => {
+                    const el = document.getElementById(id);
+                    if (val && val !== "—")
+                        el.innerHTML = `<span class="stat-label">${label}</span><span class="stat-val">${val}</span>`;
+                    else el.style.display = "none";
+                });
+
+                const tagCloud = document.getElementById("tag-cloud");
+                const genres = (d.genres || []).map((g) => `<span class="genre-tag">${g}</span>`);
+                const tags = (d.tags || [])
+                    .filter((t) => !t.isMediaSpoiler && t.rank >= 60)
+                    .sort((a, b) => b.rank - a.rank)
+                    .slice(0, 15)
+                    .map((t) => `<span class="meta-tag" title="${t.category}">${t.name}</span>`);
+                tagCloud.innerHTML = [...genres, ...tags].join("");
+
+                const raw = d.description || "No description available.";
+                const clean = raw.replace(/<[^>]*>/g, "").replace(/\n+/g, " ").trim();
+                const sentenceRe = /[^.!?]*[.!?]+/g;
+                const sentences = clean.match(sentenceRe) || [clean];
+                const previewSentences = sentences.slice(0, 3).join(" ").trim();
+                const restSentences = sentences.slice(3).join(" ").trim();
+                document.getElementById("synopsis-preview").textContent = previewSentences;
+                document.getElementById("synopsis-rest").textContent = restSentences;
+                if (!restSentences) document.getElementById("expand-btn").style.display = "none";
+
+                const charGrid = document.getElementById("char-grid");
+                const charEdges = d.characters?.edges || [];
+                if (!charEdges.length) {
+                    document.getElementById("chars-block").style.display = "none";
+                } else {
+                    charGrid.innerHTML = charEdges.map((e) => `
+                        <div class="char-card">
+                            <img src="${e.node.image?.medium || ""}" class="char-img" alt="${e.node.name.full}" onerror="this.style.display='none'" />
+                            <span class="char-name">${e.node.name.full}</span>
+                            <span class="char-role">${e.role}</span>
+                        </div>`).join("");
+                }
+
+                const staffGrid = document.getElementById("staff-grid");
+                const staffEdges = d.staff?.edges || [];
+                if (!staffEdges.length) {
+                    document.getElementById("staff-block").style.display = "none";
+                } else {
+                    staffGrid.innerHTML = staffEdges.map((e) => `
+                        <div class="staff-card">
+                            <img src="${e.node.image?.medium || ""}" class="staff-img" alt="${e.node.name.full}" onerror="this.style.display='none'" />
+                            <div class="staff-info">
+                                <span class="staff-name">${e.node.name.full}</span>
+                                <span class="staff-role">${e.role}</span>
+                            </div>
+                        </div>`).join("");
+                }
+
+                const relGrid = document.getElementById("relations-grid");
+                const bookTypes = ["MANGA", "ONE_SHOT", "NOVEL", "LIGHT_NOVEL", "MANHWA", "MANHUA"];
+                const relEdges = (d.relations?.edges || []).filter((e) => bookTypes.includes(e.node.format));
+                if (!relEdges.length) {
+                    document.getElementById("relations-block").style.display = "none";
+                } else {
+                    relGrid.innerHTML = relEdges.map((e) => `
+                        <a href="/series/${e.node.id}" class="relation-card">
+                            <img src="${e.node.coverImage?.medium || ""}" class="relation-img" alt="" onerror="this.style.display='none'" />
+                            <div class="relation-info">
+                                <span class="relation-type">${fmtRelation(e.relationType)}</span>
+                                <span class="relation-title">${e.node.title.english || e.node.title.romaji}</span>
+                                <span class="relation-format">${e.node.format?.replace(/_/g, " ") || ""}</span>
+                            </div>
+                        </a>`).join("");
+                }
+
+                gsap.from(".series-aside", { opacity: 0, x: -40, duration: 0.7, ease: "power3.out" });
+                gsap.from(".series-info > *", { opacity: 0, y: 30, duration: 0.5, stagger: 0.08, ease: "power3.out", delay: 0.2 });
+            }
+
+            // ─── Source Picker ─────────────────────────────────────────────────────
+            async function initSourcePicker() {
+                const contentType = (localStorage.getItem("contentType") || "sfw").toLowerCase();
+                const preferredSource = _sourceParam || "";
+                const anilistFormat = (window._seriesFormat || "MANGA").toUpperCase();
+                const extFormat = anilistFormat === "NOVEL" || anilistFormat === "LIGHT_NOVEL" ? "novel" : "manga";
+
+                try {
+                    const res = await fetch(`/api/extensions?contentType=${contentType}&format=${extFormat}`);
+                    const json = await res.json();
+                    let available = json.data || [];
+
+                    if (!available.length) {
+                        const fallback = await fetch(`/api/extensions?contentType=${contentType}`);
+                        const fallbackJson = await fallback.json();
+                        available = fallbackJson.data || [];
+                    }
+
+                    const dropdown = document.getElementById("source-dropdown");
+                    dropdown.innerHTML = "";
+
+                    if (!available.length) {
+                        document.getElementById("source-name").textContent = "No sources";
+                        return;
+                    }
+
+                    available.forEach((source) => {
+                        const item = document.createElement("div");
+                        item.className = "dropdown-item";
+                        item.innerHTML = `${source.icon ? `<img src="${source.icon}" width="16" onerror="this.style.display='none'" />` : ""}<span>${source.name}</span>`;
+                        item.onclick = (e) => {
+                            e.stopPropagation();
+                            selectSource(source);
+                            dropdown.classList.remove("show");
+                        };
+                        dropdown.appendChild(item);
+                    });
+
+                    const preferred = preferredSource
+                        ? available.find((s) => s.name === preferredSource) || available[0]
+                        : available[0];
+                    selectSource(preferred);
+                } catch (e) {
+                    console.error("Failed to load extensions:", e);
+                    document.getElementById("source-name").textContent = "Error loading sources";
+                }
+            }
+
+            function toggleSourceDropdown() {
+                document.getElementById("source-dropdown").classList.toggle("show");
+            }
+
+            window.onclick = (e) => {
+                if (!e.target.closest(".source-picker") && !e.target.closest("#list-modal")) {
+                    document.getElementById("source-dropdown").classList.remove("show");
+                }
+            };
+
+            async function selectSource(source) {
+                activeScraper = source;
+                if (source.icon) {
+                    document.getElementById("source-icon").src = source.icon;
+                    document.getElementById("source-icon").style.display = "block";
+                } else {
+                    document.getElementById("source-icon").style.display = "none";
+                }
+                document.getElementById("source-name").textContent = source.name;
+                await loadChapters();
+            }
+
+            // ─── Chapters ──────────────────────────────────────────────────────────
+            async function loadChapters() {
+                if (!activeScraper) return;
+
+                const listEl = document.getElementById("chapters-list");
+                listEl.innerHTML = `<div class="loader-row"><div class="spinner"></div><span>Loading chapters from ${activeScraper.name}...</span></div>`;
+                document.getElementById("chapter-pagination").innerHTML = "";
+                document.getElementById("chapter-count-badge").textContent = "";
+
+                if (window._chapterStream) {
+                    window._chapterStream.close();
+                    window._chapterStream = null;
+                }
+
+                const seriesTitle = document.getElementById("series-title").textContent;
+
+                try {
+                    const res = await fetch(`/api/chapters?source=${encodeURIComponent(activeScraper.name)}&q=${encodeURIComponent(seriesTitle)}`);
+                    const json = await res.json();
+
+                    if (!res.ok || !json.success) {
+                        listEl.innerHTML = `<div class="empty-chapters">${json.error || "Failed to load chapters."}</div>`;
+                        return;
+                    }
+
+                    allChapters = json.chapters || [];
+                    applyChapterFilter();
+
+                    if (!allChapters.length) {
+                        listEl.innerHTML = `<div class="empty-chapters">No chapters found on ${activeScraper.name}.</div>`;
+                        return;
+                    }
+
+                    document.getElementById("read-btn").onclick = () => {
+                        if (filteredChapters.length) {
+                            sessionStorage.setItem("chapterList", JSON.stringify(allChapters));
+                            sessionStorage.setItem("seriesUrl", window.location.href);
+                            const title = encodeURIComponent(document.getElementById("series-title").textContent);
+                            const chName = encodeURIComponent(filteredChapters[0].title || "");
+                            const src = encodeURIComponent(activeScraper?.name || "");
+                            const af = (window._seriesFormat || "MANGA").toUpperCase();
+                            const fmt = af === "NOVEL" || af === "LIGHT_NOVEL" ? "novel" : "manga";
+                            window.location.href = `/read?id=${encodeURIComponent(filteredChapters[0].id)}&source=${src}&title=${title}&chapter=${chName}&format=${fmt}`;
+                        }
+                    };
+                } catch (e) {
+                    console.error("Chapter load error:", e);
+                    listEl.innerHTML = `<div class="empty-chapters">Error loading chapters from ${activeScraper.name}.</div>`;
+                }
+            }
+
+            // ─── Chapter filter ────────────────────────────────────────────────────
+            function applyChapterFilter() {
+                const q = (document.getElementById("chapter-filter")?.value || "").toLowerCase();
+                const readProgress = _anilistEntry?.progress || 0;
+
+                filteredChapters = allChapters.filter((ch) => {
+                    if (_hideRead && readProgress > 0) {
+                        const num = parseFloat(ch.number || ch.chapter || 0);
+                        if (num > 0 && num <= readProgress) return false;
+                    }
+                    if (q) {
+                        const title = (ch.title || ch.name || "").toLowerCase();
+                        const num = String(ch.chapter || ch.number || "").toLowerCase();
+                        return title.includes(q) || num.includes(q);
+                    }
+                    return true;
+                });
+
+                document.getElementById("chapter-count-badge").textContent =
+                    _hideRead && _anilistEntry
+                        ? `${filteredChapters.length} unread`
+                        : allChapters.length;
+
+                currentPage = 1;
+                renderChapterPage();
+            }
+
+            function onHideReadToggle() {
+                _hideRead = document.getElementById("hide-read-toggle").checked;
+                const cb = document.getElementById("hide-read-toggle");
+                cb.style.background = _hideRead ? "#c9a84c" : "rgba(255,255,255,0.03)";
+                cb.style.borderColor = _hideRead ? "#c9a84c" : "rgba(201,168,76,0.3)";
+                applyChapterFilter();
+            }
+
+            function onChapterSearch() { applyChapterFilter(); }
+
+            function goToChapter(id, chTitle) {
+                sessionStorage.setItem("chapterList", JSON.stringify(allChapters));
+                sessionStorage.setItem("seriesUrl", window.location.href);
+                const title = encodeURIComponent(document.getElementById("series-title").textContent);
+                const src = encodeURIComponent(activeScraper?.name || "");
+                const af = (window._seriesFormat || "MANGA").toUpperCase();
+                const fmt = af === "NOVEL" || af === "LIGHT_NOVEL" ? "novel" : "manga";
+                window.location.href = `/read?id=${encodeURIComponent(id)}&source=${src}&title=${title}&chapter=${chTitle}&format=${fmt}`;
+            }
+
+            function renderChapterPage() {
+                const listEl = document.getElementById("chapters-list");
+                const paginationEl = document.getElementById("chapter-pagination");
+                const readProgress = _anilistEntry?.progress || 0;
+
+                if (!filteredChapters.length) {
+                    listEl.innerHTML = `<div class="empty-chapters">${_hideRead ? "All chapters read! 🎉" : "No chapters match your search."}</div>`;
+                    paginationEl.innerHTML = "";
+                    return;
+                }
+
+                const totalPages = Math.ceil(filteredChapters.length / PAGE_SIZE);
+                const start = (currentPage - 1) * PAGE_SIZE;
+                const pageChapters = filteredChapters.slice(start, start + PAGE_SIZE);
+
+                listEl.innerHTML = pageChapters.map((ch) => {
+                    const num = ch.number || ch.chapter || allChapters.length - allChapters.indexOf(ch);
+                    const rawTitle = ch.title || ch.name || "";
+                    const displayTitle = rawTitle.startsWith("Chapter ") ? rawTitle : rawTitle || `Chapter ${num}`;
+                    const date = ch.date ? fmtRelativeDate(ch.date) : "";
+                    const chNum = parseFloat(num);
+                    const isRead = readProgress > 0 && chNum > 0 && chNum <= readProgress;
+                    return `
+                        <div class="chapter-row ${isRead ? "ch-read" : ""}" onclick="goToChapter('${ch.id}', '${encodeURIComponent(ch.title || "")}')">
+                            <span class="ch-number">Ch. ${num}</span>
+                            <span class="ch-title">${displayTitle}</span>
+                            <span class="ch-date">${isRead ? '<span style="color:rgba(201,168,76,0.5);font-size:0.68rem;letter-spacing:0.06em;">READ</span>' : date}</span>
+                            <span class="ch-arrow">›</span>
+                        </div>`;
+                }).join("");
+
+                if (totalPages <= 1) { paginationEl.innerHTML = ""; return; }
+
+                let pages = "";
+                pages += pageBtn(1);
+                if (currentPage > 3) pages += `<span class="pg-ellipsis">…</span>`;
+                for (let p = Math.max(2, currentPage - 1); p <= Math.min(totalPages - 1, currentPage + 1); p++) {
+                    pages += pageBtn(p);
+                }
+                if (currentPage < totalPages - 2) pages += `<span class="pg-ellipsis">…</span>`;
+                if (totalPages > 1) pages += pageBtn(totalPages);
+
+                paginationEl.innerHTML = `
+                    <button class="pg-btn pg-arrow" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>‹</button>
+                    ${pages}
+                    <button class="pg-btn pg-arrow" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? "disabled" : ""}>›</button>
+                `;
+            }
+
+            function pageBtn(p) {
+                return `<button class="pg-btn ${p === currentPage ? "pg-active" : ""}" onclick="changePage(${p})">${p}</button>`;
+            }
+
+            function changePage(p) {
+                const totalPages = Math.ceil(filteredChapters.length / PAGE_SIZE);
+                if (p < 1 || p > totalPages) return;
+                currentPage = p;
+                renderChapterPage();
+                document.getElementById("chapters-section").scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+
+            function expandSynopsis() {
+                const acc = document.getElementById("synopsis-accordion");
+                const btn = document.getElementById("expand-btn");
+                const isOpen = acc.classList.toggle("open");
+                btn.textContent = isOpen ? "Show Less ▴" : "Read More ▾";
+            }
+
+            // ─── AniList List Management ───────────────────────────────────────────
+            async function initAnilistListBtn() {
+                if (!SERIES_ID || isNaN(Number(SERIES_ID)) || _sourceParam) {
+                    document.getElementById("list-btn").style.display = "none";
+                    return;
+                }
+
+                document.getElementById("list-btn").onclick = () => {
+                    alert("Connect your AniList account in Settings to manage your list.");
+                };
+
+                try {
+                    let me = gCache("anilistMe");
+                    if (!me) {
+                        const meRes = await fetch("/api/anilist/me");
+                        if (!meRes.ok) return;
+                        me = await meRes.json();
+                        if (!me.success || !me.token) return;
+                        sCache("anilistMe", me, SERIES_CACHE_TTL.anilistMe);
+                    }
+
+                    _anilistToken = me.token;
+                    _anilistUserId = parseInt(me.userId);
+
+                    const listKey = `listEntry_${me.userId}_${SERIES_ID}`;
+                    let entryData = gCache(listKey);
+
+                    if (!entryData) {
+                        const query = `
+                            query ($userId: Int, $mediaId: Int) {
+                                MediaList(userId: $userId, mediaId: $mediaId) {
+                                    id status progress progressVolumes score
+                                }
+                            }
+                        `;
+                        const res = await fetch("https://graphql.anilist.co", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json", "Accept": "application/json", "Authorization": `Bearer ${_anilistToken}` },
+                            body: JSON.stringify({ query, variables: { userId: _anilistUserId, mediaId: parseInt(SERIES_ID) } })
+                        });
+                        entryData = await res.json();
+                        sCache(listKey, entryData, SERIES_CACHE_TTL.listEntry);
+                    }
+
+                    _anilistEntry = entryData?.data?.MediaList || null;
+
+                    if (_anilistEntry) {
+                        renderEditBtn();
+                        document.getElementById("hide-read-wrap").style.display = "block";
+                        if (allChapters.length) applyChapterFilter();
+                    } else {
+                        renderAddBtn();
+                    }
+                } catch (e) {
+                    console.error("AniList list check failed:", e);
+                }
+            }
+
+            function renderAddBtn() {
+                const btn = document.getElementById("list-btn");
+                btn.textContent = "+ Add to List";
+                btn.style.borderColor = "";
+                btn.style.color = "";
+                btn.onclick = () => openListModal(false);
+                document.getElementById("hide-read-wrap").style.display = "none";
+            }
+
+            function renderEditBtn() {
+                const btn = document.getElementById("list-btn");
+                const statusLabel = {
+                    CURRENT: "Reading", COMPLETED: "Completed", PAUSED: "Paused",
+                    DROPPED: "Dropped", PLANNING: "Plan to Read", REPEATING: "Rereading"
+                }[_anilistEntry.status] || _anilistEntry.status;
+                btn.textContent = `✎ ${statusLabel} · Ch. ${_anilistEntry.progress}`;
+                btn.style.borderColor = "rgba(201,168,76,0.4)";
+                btn.style.color = "var(--gold, #c9a84c)";
+                btn.onclick = () => openListModal(true);
+            }
+
+            function openListModal(isEdit) {
+                const entry = _anilistEntry || {};
+                const totalNum = window._totalChapters || 0;
+                document.getElementById("modal-title").textContent = isEdit ? "Edit List Entry" : "Add to List";
+                document.getElementById("modal-status").value = entry.status || "CURRENT";
+                document.getElementById("modal-progress").value = entry.progress || 0;
+                document.getElementById("modal-progress").max = totalNum || "";
+                document.getElementById("modal-score").value = entry.score || 0;
+                document.getElementById("modal-save-btn").textContent = isEdit ? "Save Changes" : "Add to List";
+                document.getElementById("modal-remove-btn").style.display = isEdit ? "block" : "none";
+                document.getElementById("modal-progress-label").textContent =
+                    totalNum ? `Chapter Progress / ${totalNum}` : "Chapter Progress";
+                document.getElementById("list-modal").style.display = "flex";
+            }
+
+            function closeListModal() {
+                document.getElementById("list-modal").style.display = "none";
+            }
+
+            document.getElementById("list-modal").addEventListener("click", (e) => {
+                if (e.target === document.getElementById("list-modal")) closeListModal();
+            });
+
+            function stepProgress(dir) {
+                const input = document.getElementById("modal-progress");
+                const val = parseInt(input.value) || 0;
+                const max = parseInt(input.max) || Infinity;
+                input.value = Math.max(0, Math.min(max, val + dir));
+            }
+
+            async function saveListEntry() {
+                const status   = document.getElementById("modal-status").value;
+                const progress = parseInt(document.getElementById("modal-progress").value) || 0;
+                const score    = parseFloat(document.getElementById("modal-score").value) || 0;
+                const saveBtn  = document.getElementById("modal-save-btn");
+                saveBtn.textContent = "Saving…";
+                saveBtn.disabled = true;
+
+                const mutation = `
+                    mutation ($mediaId: Int, $status: MediaListStatus, $progress: Int, $score: Float) {
+                        SaveMediaListEntry(mediaId: $mediaId, status: $status, progress: $progress, score: $score) {
+                            id status progress score
+                        }
+                    }
+                `;
+                try {
+                    const res = await fetch("https://graphql.anilist.co", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json", "Authorization": `Bearer ${_anilistToken}` },
+                        body: JSON.stringify({ query: mutation, variables: { mediaId: parseInt(SERIES_ID), status, progress, score } })
+                    });
+                    const data = await res.json();
+                    const saved = data?.data?.SaveMediaListEntry;
+                    if (!saved) throw new Error("Save failed");
+                    _anilistEntry = { ..._anilistEntry, ...saved };
+                    dCache(`listEntry_${_anilistUserId}_${SERIES_ID}`);
+                    closeListModal();
+                    renderEditBtn();
+                    document.getElementById("hide-read-wrap").style.display = "block";
+                    if (allChapters.length) applyChapterFilter();
+                } catch (e) {
+                    console.error("Save failed:", e);
+                    saveBtn.textContent = "Save Changes";
+                    saveBtn.disabled = false;
+                    alert("Failed to save. Please try again.");
+                }
+            }
+
+            async function removeListEntry() {
+                if (!_anilistEntry?.id) return;
+                if (!confirm("Remove this manga from your list?")) return;
+                const mutation = `mutation ($id: Int) { DeleteMediaListEntry(id: $id) { deleted } }`;
+                try {
+                    await fetch("https://graphql.anilist.co", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json", "Authorization": `Bearer ${_anilistToken}` },
+                        body: JSON.stringify({ query: mutation, variables: { id: _anilistEntry.id } })
+                    });
+                    _anilistEntry = null;
+                    _hideRead = false;
+                    dCache(`listEntry_${_anilistUserId}_${SERIES_ID}`);
+                    document.getElementById("hide-read-toggle").checked = false;
+                    closeListModal();
+                    renderAddBtn();
+                    if (allChapters.length) applyChapterFilter();
+                } catch (e) {
+                    console.error("Remove failed:", e);
+                    alert("Failed to remove. Please try again.");
+                }
+            }
+
+            // ─── Helpers ───────────────────────────────────────────────────────────
+            function fmtStatus(s) {
+                const map = { FINISHED: "Finished", RELEASING: "Releasing", NOT_YET_RELEASED: "Upcoming", CANCELLED: "Cancelled", HIATUS: "On Hiatus" };
+                return map[s] || s;
+            }
+            function fmtDate(d) {
+                if (!d?.year) return null;
+                const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                return `${d.month ? months[d.month - 1] + " " : ""}${d.year}`;
+            }
+            function fmtCountry(c) {
+                const map = { JP: "🇯🇵 Japan", KR: "🇰🇷 Korea", CN: "🇨🇳 China", TW: "🇹🇼 Taiwan" };
+                return map[c] || c;
+            }
+            function fmtRelation(r) {
+                const map = { SEQUEL: "Sequel", PREQUEL: "Prequel", ALTERNATIVE: "Alternative", SIDE_STORY: "Side Story", SUMMARY: "Summary", SPIN_OFF: "Spin-off", PARENT: "Parent", CHARACTER: "Character", OTHER: "Other", SOURCE: "Source", ADAPTATION: "Adaptation" };
+                return map[r] || r;
+            }
+            function fmtRelativeDate(dateStr) {
+                if (!dateStr) return "";
+                const d = new Date(dateStr);
+                const now = new Date();
+                const diff = Math.floor((now - d) / 86400000);
+                if (diff < 1) return "Today";
+                if (diff < 7) return `${diff}d ago`;
+                if (diff < 30) return `${Math.floor(diff / 7)}w ago`;
+                if (diff < 365) return `${Math.floor(diff / 30)}mo ago`;
+                return `${Math.floor(diff / 365)}y ago`;
+            }
+
+            // ─── Init ──────────────────────────────────────────────────────────────
+            loadSeries();
+            initAnilistListBtn();
+
+            const seriesHeader = document.getElementById("series-header");
+            window.addEventListener("scroll", () => {
+                seriesHeader.classList.toggle("scrolled", window.scrollY > 30);
+            }, { passive: true });
+        </script>
+
+        <style>
+            #modal-progress::-webkit-outer-spin-button,
+            #modal-progress::-webkit-inner-spin-button,
+            #modal-score::-webkit-outer-spin-button,
+            #modal-score::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+            #modal-progress, #modal-score { -moz-appearance: textfield; }
+            #modal-status {
+                appearance: none; -webkit-appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(240,236,228,0.35)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                background-repeat: no-repeat; background-position: right 12px center;
+                padding-right: 34px !important; color-scheme: dark;
+            }
+            #modal-status option { background: #181820; color: #f0ece4; }
+            .ch-read { opacity: 0.45; }
+            .ch-read:hover { opacity: 0.75; }
+            .ch-read .ch-number { color: rgba(201,168,76,0.4); }
+            .ch-read .ch-title { text-decoration: line-through; text-decoration-color: rgba(240,236,228,0.2); }
+            #hide-read-toggle:checked::after {
+                content: '✓'; position: absolute; top: 50%; left: 50%;
+                transform: translate(-50%, -50%); font-size: 9px;
+                color: #0a0a0b; font-weight: 700; line-height: 1;
+            }
+        </style>
+    </body>
+</html>

@@ -2,3 +2,9 @@ node_modules/*
 .env
 dist/*
 engine.bin
+src/WaifuAnime/node_modules/*
+src/WaifuManga/node_modules/*
+src/WaifuBoard/node_modules/*
+src/WaifuAnime/.npm/*
+src/WaifuManga/.npm/*
+src/WaifuBoard/.npm/*

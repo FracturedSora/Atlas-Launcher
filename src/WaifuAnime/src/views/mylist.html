@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WaifuAnime | My List</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/home.css" />
+  <link rel="stylesheet" href="/styles/player.css" />
+  <link rel="stylesheet" href="/videojs/video-js.min.css" />
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <div class="nav-left">
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="#" class="active">My List</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="search-page" id="search-page">
+    <div class="search-page-inner" id="search-page-inner"></div>
+  </div>
+
+  <section class="hero" id="hero" style="display: none;">
+    <div class="hero-media">
+      <img class="hero-img" id="hero-img" src="" alt="" />
+      <div class="hero-scrim"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-label" id="hero-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="14" height="14">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>Plan to Watch</span>
+      </div>
+      <h1 class="hero-title" id="hero-title"></h1>
+      <div class="hero-meta" id="hero-meta"></div>
+      <p class="hero-synopsis" id="hero-synopsis"></p>
+      <div class="hero-actions">
+        <button class="btn-play" id="hero-play">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          Play
+        </button>
+        <button class="btn-more" id="hero-more">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+          </svg>
+          More Info
+        </button>
+      </div>
+    </div>
+    <div class="hero-progress" id="hero-progress"></div>
+  </section>
+
+  <main class="main" id="main">
+    <div class="page-header" id="page-header" style="margin-top: 80px; padding: 0 4%; margin-bottom: 20px;">
+      <h1 style="color: white; font-size: 2.2rem;">My List</h1>
+    </div>
+
+    <section class="row" id="row-CURRENT" style="display: none;">
+      <div class="row-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 4%; margin-bottom: 10px;">
+        <h2 class="row-title">Continue Watching</h2>
+      </div>
+      <div class="row-rail-wrap">
+        <button class="rail-btn prev" data-rail="r-CURRENT" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="row-rail wide" id="r-CURRENT"></div>
+        <button class="rail-btn next" data-rail="r-CURRENT" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="row" id="row-PLANNING" style="display: none;">
+      <div class="row-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 4%; margin-bottom: 10px;">
+        <h2 class="row-title">Plan to Watch</h2>
+        <input type="text" class="list-filter-input" data-status="PLANNING" placeholder="Filter..." style="padding: 6px 12px; border-radius: 4px; border: 1px solid #333; background: #141414; color: white;" />
+      </div>
+      <div class="row-rail-wrap">
+        <button class="rail-btn prev" data-rail="r-PLANNING" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="row-rail" id="r-PLANNING"></div>
+        <button class="rail-btn next" data-rail="r-PLANNING" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="row" id="row-COMPLETED" style="display: none;">
+      <div class="row-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 4%; margin-bottom: 10px;">
+        <h2 class="row-title">Completed</h2>
+        <input type="text" class="list-filter-input" data-status="COMPLETED" placeholder="Filter..." style="padding: 6px 12px; border-radius: 4px; border: 1px solid #333; background: #141414; color: white;" />
+      </div>
+      <div class="row-rail-wrap">
+        <button class="rail-btn prev" data-rail="r-COMPLETED" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="row-rail" id="r-COMPLETED"></div>
+        <button class="rail-btn next" data-rail="r-COMPLETED" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section class="row" id="row-PAUSED" style="display: none;">
+      <div class="row-header" style="display: flex; justify-content: space-between; align-items: center; padding-right: 4%; margin-bottom: 10px;">
+        <h2 class="row-title">Paused</h2>
+        <input type="text" class="list-filter-input" data-status="PAUSED" placeholder="Filter..." style="padding: 6px 12px; border-radius: 4px; border: 1px solid #333; background: #141414; color: white;" />
+      </div>
+      <div class="row-rail-wrap">
+        <button class="rail-btn prev" data-rail="r-PAUSED" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="row-rail" id="r-PAUSED"></div>
+        <button class="rail-btn next" data-rail="r-PAUSED" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <div id="not-logged-in" style="display: none; text-align: center; padding: 100px 20px; color: #888;">
+      <h2>You are not logged in.</h2>
+      <p>Please log in via the Atlas Launcher to view your AniList.</p>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modal-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <div class="modal-top">
+        <img class="modal-banner" id="modal-banner" src="" alt="" />
+        <div class="modal-top-scrim"></div>
+        <div class="modal-top-content">
+          <h2 class="modal-title" id="modal-title"></h2>
+          <div class="modal-ctas">
+            <button class="btn-play sm" id="modal-play">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </button>
+            <button class="btn-icon-round" id="modal-edit-btn" title="Edit in AniList">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button class="btn-icon-round" id="modal-add-btn" title="Add to AniList" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-main">
+          <div class="modal-chips" id="modal-chips"></div>
+          <p class="modal-synopsis" id="modal-synopsis"></p>
+        </div>
+        <div class="modal-aside">
+          <div class="modal-row"><span class="modal-key">Genres:</span><span class="modal-val" id="m-genres"></span></div>
+          <div class="modal-row"><span class="modal-key">Format:</span><span class="modal-val" id="m-format"></span></div>
+          <div class="modal-row"><span class="modal-key">Episodes:</span><span class="modal-val" id="m-eps"></span></div>
+          <div class="modal-row"><span class="modal-key">Status:</span><span class="modal-val" id="m-status"></span></div>
+          <div class="modal-row"><span class="modal-key">Score:</span><span class="modal-val accent" id="m-score"></span></div>
+        </div>
+      </div>
+
+      <div class="modal-eps-section" id="modal-eps-section" style="display:none;">
+        <div class="modal-eps-header">
+          <h3 class="modal-eps-title">Episodes</h3>
+          <span class="modal-eps-count" id="modal-eps-count"></span>
+        </div>
+        <div class="modal-eps-list" id="modal-eps-list">
+          <div class="eps-loading">
+            <div class="eps-spinner"></div>
+            <span>Loading episodes…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="edit-backdrop" id="edit-backdrop">
+    <div class="edit-modal" id="edit-modal">
+      <div class="edit-header">
+        <span class="edit-title" id="edit-modal-title"></span>
+        <button class="edit-close" id="edit-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="edit-field">
+        <label class="edit-label">Status</label>
+        <select class="edit-select" id="edit-status">
+          <option value="CURRENT">Watching</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="PAUSED">Paused</option>
+          <option value="DROPPED">Dropped</option>
+          <option value="PLANNING">Plan to Watch</option>
+          <option value="REPEATING">Rewatching</option>
+        </select>
+      </div>
+
+      <div class="edit-field">
+        <label class="edit-label">Progress <span class="edit-label-sub" id="edit-progress-max"></span></label>
+        <div class="edit-stepper">
+          <button class="edit-step" id="edit-step-down">−</button>
+          <input class="edit-num" id="edit-progress" type="number" min="0" value="0" />
+          <button class="edit-step" id="edit-step-up">+</button>
+        </div>
+      </div>
+
+      <div class="edit-field">
+        <label class="edit-label">Score <span class="edit-label-sub">(0–10)</span></label>
+        <div class="edit-stepper">
+          <button class="edit-step" id="edit-score-down">−</button>
+          <input class="edit-num" id="edit-score" type="number" min="0" max="10" step="0.5" value="0" />
+          <button class="edit-step" id="edit-score-up">+</button>
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <button class="edit-save" id="edit-save">Save</button>
+        <button class="edit-remove" id="edit-remove" style="display:none;">Remove from List</button>
+      </div>
+
+      <p class="edit-feedback" id="edit-feedback"></p>
+    </div>
+  </div>
+
+  <div class="player-overlay" id="player-overlay">
+    <video id="atlas-player" class="video-js" playsinline></video>
+    <div class="player-topbar" id="player-topbar">
+      <button class="player-back" id="player-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="player-topbar-meta">
+        <div class="player-show-title" id="player-show-title"></div>
+        <div class="player-ep-title"   id="player-ep-title"></div>
+      </div>
+    </div>
+
+    <button class="player-skip-btn" id="player-skip-intro">
+      Skip Intro
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-9.86L12.97 12 8 15.86V8.14zM16 6h2v12h-2z"/></svg>
+    </button>
+    <button class="player-skip-btn" id="player-skip-outro">
+      Skip Outro
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-9.86L12.97 12 8 15.86V8.14zM16 6h2v12h-2z"/></svg>
+    </button>
+
+    <div class="player-shelf" id="player-shelf">
+      <div class="player-scrubber" id="player-scrubber">
+        <div class="player-scrubber-track" id="player-scrubber-track">
+          <div class="player-scrubber-fill"  id="player-scrubber-fill"></div>
+        </div>
+        <div class="player-scrubber-thumb" id="player-scrubber-thumb"></div>
+      </div>
+
+      <div class="player-controls">
+        <div class="player-ctrl-left">
+          <button class="pctrl pctrl-lg" id="pctrl-play" title="Play/Pause">
+            <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="26" height="26"><path d="M8 5v14l11-7z"/></svg>
+            <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="26" height="26" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+          </button>
+          <button class="pctrl pctrl-md" id="pctrl-back10" title="Rewind 10s">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/><text x="7.5" y="15.5" font-size="4.5" fill="currentColor" font-family="sans-serif" font-weight="bold">10</text></svg>
+          </button>
+          <button class="pctrl pctrl-md" id="pctrl-fwd10" title="Forward 10s">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/><text x="7.5" y="15.5" font-size="4.5" fill="currentColor" font-family="sans-serif" font-weight="bold">10</text></svg>
+          </button>
+          <div class="pctrl-vol-group">
+            <button class="pctrl pctrl-md" id="pctrl-vol" title="Mute">
+              <svg class="icon-vol-up" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              <svg class="icon-vol-off" viewBox="0 0 24 24" fill="currentColor" width="22" height="22" style="display:none"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+            </button>
+            <input class="pctrl-vol-slider" id="pctrl-vol-slider" type="range" min="0" max="1" step="0.05" value="1" />
+          </div>
+          <span class="player-time-display">
+            <span id="player-time-cur">0:00</span>
+            <span style="color:rgba(255,255,255,0.4)"> / </span>
+            <span id="player-time-dur">0:00</span>
+          </span>
+          <span class="player-ctrl-title" id="player-ctrl-title"></span>
+        </div>
+
+        <div class="player-ctrl-right">
+          <div class="player-lang-group" id="player-lang-wrap">
+            <button class="player-lang-btn active" id="ptgl-sub">SUB</button>
+            <button class="player-lang-btn"        id="ptgl-dub">DUB</button>
+          </div>
+          <div class="player-quality-wrap" id="player-ext-wrap">
+            <button class="player-quality-btn" id="player-ext-btn">Source</button>
+            <div class="player-quality-menu" id="player-ext-menu"></div>
+          </div>
+          <div class="player-quality-wrap" id="player-quality-wrap">
+            <button class="player-quality-btn" id="player-quality-btn">Auto</button>
+            <div class="player-quality-menu" id="player-quality-menu"></div>
+          </div>
+          <button class="pctrl pctrl-sm" id="pctrl-eps" title="Episodes">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+          </button>
+          <button class="pctrl pctrl-md" id="pctrl-next" title="Next episode">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M6 18l8.5-6L6 6v12zm2-9.86L12.97 12 8 15.86V8.14zM16 6h2v12h-2z"/></svg>
+          </button>
+          <button class="pctrl pctrl-md" id="pctrl-fs" title="Fullscreen">
+            <svg class="icon-fs-enter" viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+            <svg class="icon-fs-exit" viewBox="0 0 24 24" fill="currentColor" width="22" height="22" style="display:none"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="player-eps-panel" id="player-eps-panel">
+      <div class="player-eps-header">
+        <span>Episodes</span>
+        <button class="pctrl" id="pctrl-eps-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18" height="18"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="player-eps-list" id="player-eps-list"></div>
+    </div>
+
+    <div class="player-spinner-wrap">
+      <div class="player-spinner"></div>
+    </div>
+
+    <div class="player-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h3>Playback Error</h3>
+      <p id="player-error-msg"></p>
+      <button class="player-retry" id="player-retry">Try Again</button>
+    </div>
+  </div>
+
+  <script src="/videojs/video.min.js"></script>
+  <script src="/scripts/player.js"></script>
+  <script src="/scripts/mylist.js"></script>
+</body>
+</html>

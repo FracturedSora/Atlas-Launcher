@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WaifuManga</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <header class="glass-header">
+            <div class="search-nav">
+                <input
+                    type="text"
+                    id="search-bar"
+                    placeholder="Search for a book..."
+                />
+            </div>
+        </header>
+
+        <main id="main-content">
+            <section class="hero-container">
+                <div class="hero-bg-wrapper">
+                    <img id="hero-bg" src="" alt="" />
+                    <div class="hero-gradient"></div>
+                </div>
+
+                <div class="hero-content">
+                    <div class="glass-panel info-panel">
+                        <span class="badge" id="hero-badge">#1 Trending</span>
+                        <h2 id="hero-title">Loading...</h2>
+                        <div class="hero-tags" id="hero-tags"></div>
+                        <p id="hero-desc">
+                            Discovering the best series across the Nexus
+                            registry.
+                        </p>
+                        <div class="hero-actions">
+                            <button class="primary-btn glass-btn">
+                                ▶ Read Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="hero-nav left" id="hero-prev">❮</button>
+                <button class="hero-nav right" id="hero-next">❯</button>
+                <div class="hero-indicators" id="hero-dots"></div>
+            </section>
+
+            <div id="home-shelves" class="shelves-container">
+                <section class="carousel-section">
+                    <h3 class="section-title">Trending Right Now</h3>
+                    <div class="carousel-wrapper">
+                        <button
+                            class="scroll-btn left"
+                            onclick="scrollTrack('track-trending', -600)"
+                        >
+                            ❮
+                        </button>
+                        <div class="carousel-track" id="track-trending"></div>
+                        <button
+                            class="scroll-btn right"
+                            onclick="scrollTrack('track-trending', 600)"
+                        >
+                            ❯
+                        </button>
+                    </div>
+                </section>
+
+                <section class="carousel-section">
+                    <h3 class="section-title">All-Time Popular</h3>
+                    <div class="carousel-wrapper">
+                        <button
+                            class="scroll-btn left"
+                            onclick="scrollTrack('track-popular', -600)"
+                        >
+                            ❮
+                        </button>
+                        <div class="carousel-track" id="track-popular"></div>
+                        <button
+                            class="scroll-btn right"
+                            onclick="scrollTrack('track-popular', 600)"
+                        >
+                            ❯
+                        </button>
+                    </div>
+                </section>
+
+                <section class="carousel-section">
+                    <h3 class="section-title">Fan Favorites</h3>
+                    <div class="carousel-wrapper">
+                        <button
+                            class="scroll-btn left"
+                            onclick="scrollTrack('track-favorites', -600)"
+                        >
+                            ❮
+                        </button>
+                        <div class="carousel-track" id="track-favorites"></div>
+                        <button
+                            class="scroll-btn right"
+                            onclick="scrollTrack('track-favorites', 600)"
+                        >
+                            ❯
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <div
+                id="search-view"
+                class="shelves-container"
+                style="display: none"
+            >
+                <div id="results"></div>
+            </div>
+        </main>
+
+        <script src="app.js"></script>
+    </body>
+</html>
