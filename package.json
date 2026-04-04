@@ -47,6 +47,12 @@
       ".env"
     ],
     "asar": true,
+    "asarUnpack": [
+          "node_modules/**/*",
+          "src/WaifuAnime/**/*",
+          "src/WaifuManga/**/*",
+          "src/WaifuBoard/**/*"
+        ],
     "win": {
       "target": "nsis",
       "icon": "public/logos/launcher.ico"
