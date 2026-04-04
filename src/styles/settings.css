@@ -853,3 +853,24 @@ input:checked + .slider:before {
     background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.2), transparent);
     margin: 8px auto;
 }
+
+
+.settings-dropdown {
+    background: #2a2a2a;
+    color: white;
+    border: 1px solid #3f3f3f;
+    padding: 8px 12px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.settings-dropdown:hover {
+    border-color: #0055ff;
+}
+
+.settings-dropdown option {
+    background: #1a1a1a;
+}

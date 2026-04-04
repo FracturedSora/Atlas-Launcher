@@ -4,7 +4,7 @@ const REGISTRY_SOURCES = [
 ];
 
 const LAUNCHER_REPO   = "FracturedSora/Atlas-Launcher";
-const CURRENT_VERSION = "Build-12W9B26-3D";
+const CURRENT_VERSION = "v1.5.0";
 
 let allApps        = [];
 let externalApps   = [];

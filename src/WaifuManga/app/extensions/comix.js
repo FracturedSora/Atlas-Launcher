@@ -1,6 +1,7 @@
 /**
  * Nexus Extension for Comix.to
  * Scraping logic is 1:1 with the Seanime Provider implementation.
+ * Now includes robust dynamic language filtering based on user settings.
  */
 class ComixProvider {
   constructor() {
@@ -105,12 +106,15 @@ class ComixProvider {
     return Array.from(chapterMap.values());
   }
 
-  // ─── findChapters (1:1 Seanime) ──────────────────────────────────────────
+  // ─── findChapters (1:1 Seanime + Robust Language Filter) ─────────────────
   async findChapters(mangaId) {
     var parts = mangaId.split("|");
     var hashId = parts[0];
     var slug = parts[1];
     if (!hashId || !slug) return [];
+
+    // Retrieve the user's preferred language, defaulting to English ('en')
+    var targetLang = localStorage.getItem("language") || "en";
 
     var baseUrl =
       this.apiUrl +
@@ -144,8 +148,24 @@ class ComixProvider {
         }
       }
 
-      // Map items (1:1 Seanime)
-      var chapters = allChapters.map(function (item) {
+      // ─── ROBUST LANGUAGE NORMALIZATION ───
+      // Handles 'jp' vs 'ja', 'en-US' vs 'en', and missing values
+      var normalizeLang = function (langCode) {
+        if (!langCode) return "en"; // Default empty/null to English
+        var l = langCode.toLowerCase().trim();
+        if (l === "jp") return "ja"; // Map 'jp' to 'ja' standard
+        return l.split("-")[0]; // Convert 'en-us' or 'en-gb' to 'en'
+      };
+
+      var userLang = normalizeLang(targetLang);
+
+      var filteredChapters = allChapters.filter(function (item) {
+        var itemLang = normalizeLang(item.language);
+        return itemLang === userLang;
+      });
+
+      // Map items
+      var chapters = filteredChapters.map(function (item) {
         var compositeChapterId =
           hashId + "|" + slug + "|" + item.chapter_id + "|" + item.number;
 

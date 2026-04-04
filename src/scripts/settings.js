@@ -57,6 +57,42 @@ const oauthModalBackdrop = document.querySelector(".oauth-modal-backdrop");
 const modalClose = document.getElementById("modal-close");
 const linkAccountBtn = document.getElementById("link-account-btn");
 const oauthCancel = document.getElementById("oauth-cancel");
+const languageSelect = document.getElementById("language-select");
+
+// 1. Load settings from the file on startup
+window.addEventListener("DOMContentLoaded", async () => {
+    const languageSelect = document.getElementById("language-select");
+
+    // Change electronAPI to backendAPI here
+    if (languageSelect && window.backendAPI?.getSettings) {
+        const settings = await window.backendAPI.getSettings();
+        if (settings && settings.language) {
+            languageSelect.value = settings.language;
+            localStorage.setItem("language", settings.language);
+            console.log("Settings loaded from file:", settings.language);
+        }
+    }
+});
+
+// 2. Handle Language Change
+document.getElementById("language-select")?.addEventListener("change", async (e) => {
+    const newLang = e.target.value;
+
+    // UI Update
+    localStorage.setItem("language", newLang);
+
+    // File Update - Change electronAPI to backendAPI here
+    if (window.backendAPI?.updateSettings) {
+        const result = await window.backendAPI.updateSettings({ language: newLang });
+        if (result.success) {
+            console.log("✅ Settings saved to ~/AtlasLauncher/settings.json");
+        } else {
+            console.error("❌ Failed to save to file:", result.error);
+        }
+    } else {
+        console.error("backendAPI.updateSettings is missing!");
+    }
+});
 
 function updateAniListUI(username, avatar) {
   const usernameEl = document.getElementById("anilist-username");

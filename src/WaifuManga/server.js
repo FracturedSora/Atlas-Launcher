@@ -5,20 +5,58 @@ global.File = File;
 const fastify = require("fastify")({ logger: false }); // logger:false prevents log spam crashing stdio
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
 const cheerio = require("cheerio");
 global.cheerio = cheerio;
+
+// ─── Backend Language Bridge ──────────────────────────────────────────────────
+// Reads the language directly from your Atlas Launcher settings file so backend
+// extensions can filter chapters dynamically based on the user's choice.
+const settingsPath = path.join(os.homedir(), "AtlasLauncher", "settings.json");
+let cachedLang = 'en';
+let lastLangRead = 0;
+
+function getAppLanguage() {
+  if (Date.now() - lastLangRead < 2000) return cachedLang; // Throttle disk reads
+  try {
+    if (fs.existsSync(settingsPath)) {
+      const settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+      cachedLang = settings.language || 'en';
+    }
+  } catch (e) {}
+  lastLangRead = Date.now();
+  return cachedLang;
+}
+
+// Emulate localStorage so extensions running on Node.js don't crash
+global.localStorage = {
+  getItem: (key) => {
+    if (key === "language") return getAppLanguage();
+    if (key === "contentType") return "sfw";
+    return null;
+  },
+  setItem: () => {},
+  removeItem: () => {},
+  clear: () => {}
+};
+
+// Formats AniList titles before sending to the frontend
+function applyLanguagePreference(media, lang) {
+  if (!media || !media.title) return media;
+  const isJp = lang === 'jp' || lang === 'ja';
+
+  // Hijack the english title field so the frontend natively displays the correct string
+  media.title.english = isJp
+    ? (media.title.native || media.title.romaji || media.title.english)
+    : (media.title.english || media.title.romaji || media.title.native);
+
+  return media;
+}
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 const AUTH_HEADER_NAME = "x-secret-key";
 const AUTH_HEADER_VALUE =
   "6007278395b8b11a424fe69eca218e70ef0c6e79ada713beff1a1bbf6f20863bf95a0b9b2a467a7f7fb728a175c1861f367605e421186095cda92542";
-
-// fastify.addHook("preHandler", async (request, reply) => {
-//   const secretKey = request.headers[AUTH_HEADER_NAME];
-//   if (secretKey !== AUTH_HEADER_VALUE) {
-//     return reply.redirect("https://www.youtube.com");
-//   }
-// });
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 fastify.register(require("@fastify/cors"), {
@@ -27,7 +65,6 @@ fastify.register(require("@fastify/cors"), {
 });
 
 // ─── Atomic DB ────────────────────────────────────────────────────────────────
-
 const dbPath = path.join(__dirname, "waifumanga.db");
 
 const db = {
@@ -63,9 +100,6 @@ const db = {
 db.load();
 
 // ─── Rate-limited AniList queue ───────────────────────────────────────────────
-// Semaphore-style queue: one error NEVER kills the queue for subsequent callers.
-// Each caller gets their own promise resolved/rejected independently.
-
 let _anilistBusy = false;
 const _anilistWaiters = [];
 
@@ -87,9 +121,9 @@ async function _drainAnilist() {
   } catch (e) {
     reject(e);
   } finally {
-    await new Promise((r) => setTimeout(r, 700)); // 700ms between all AniList requests
+    await new Promise((r) => setTimeout(r, 700));
     _anilistBusy = false;
-    _drainAnilist(); // drain next
+    _drainAnilist();
   }
 }
 
@@ -105,12 +139,12 @@ async function anilistFetch(variables, query) {
   });
 }
 
-// ─── AniList metadata (cache-first, rate-limited) ─────────────────────────────
+// ─── AniList metadata ─────────────────────────────────────────────────────────
 const METADATA_QUERY = `
   query ($search: String) {
     Media(search: $search, type: MANGA) {
       id
-      title { romaji english }
+      title { romaji english native }
       coverImage { large }
       description
       isAdult
@@ -160,7 +194,7 @@ const SERIES_QUERY = `
       relations {
         edges {
           relationType
-          node { id title { english romaji } type format coverImage { medium } status }
+          node { id title { english romaji native } type format coverImage { medium } status }
         }
       }
     }
@@ -172,10 +206,9 @@ fastify.register(require("@fastify/static"), {
   prefix: "/",
 });
 
-// ─── Cloudscraper fetch (CF bypass for extensions) ────────────────────────────
+// ─── Cloudscraper fetch ────────────────────────────────────────────────────────
 const cloudscraper = require("cloudscraper");
 
-// Capture node-fetch directly — never touches globalThis.fetch so no recursion
 const _nativeFetch = (...args) =>
   import("node-fetch").then(({ default: f }) => f(...args));
 
@@ -195,13 +228,12 @@ global.fetch = async (url, options = {}) => {
     return _nativeFetch(url, options);
   }
 
-  // Route through cloudscraper
   const method = (options.method || "GET").toUpperCase();
   const csOptions = {
     method,
     url,
     headers: options.headers || {},
-    encoding: null, // get raw buffer
+    encoding: null,
   };
 
   if (options.body) csOptions.body = options.body;
@@ -224,7 +256,6 @@ global.fetch = async (url, options = {}) => {
     });
   });
 
-  // Wrap in a fetch-compatible Response shape
   const bodyBuf = Buffer.isBuffer(rawBuffer.body)
     ? rawBuffer.body
     : Buffer.from(rawBuffer.body || "");
@@ -245,7 +276,6 @@ global.fetch = async (url, options = {}) => {
 };
 
 // ─── Extension loader ──────────────────────────────────────────────────────────
-
 global.window = {};
 global.window.Nexus = {
   extensions: [],
@@ -285,13 +315,9 @@ fs.readdirSync(extensionsDir)
   });
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-
 fastify.get("/", async (_req, reply) => reply.sendFile("index.html"));
-fastify.get("/series/:id", async (_req, reply) =>
-  reply.sendFile("series.html"),
-);
+fastify.get("/series/:id", async (_req, reply) => reply.sendFile("series.html"));
 fastify.get("/read", async (_req, reply) => reply.sendFile("reader.html"));
-// Wildcard to catch /read/anything — pipes in path params cause issues, redirect to query style
 fastify.get("/read/*", async (request, reply) => {
   const raw = request.params["*"];
   const qs = new URLSearchParams(request.query);
@@ -302,17 +328,20 @@ fastify.get("/read/*", async (request, reply) => {
 // ── GET /api/series/:id ────────────────────────────────────────────────────────
 fastify.get("/api/series/:id", async (request, reply) => {
   const { id } = request.params;
+  const lang = request.query.lang || getAppLanguage();
   const isNumeric = /^\d+$/.test(id);
+
   if (!db.data.series) db.data.series = {};
 
+  // Helper to clone and apply language so we don't mutate DB cache
+  const sendLocalized = (mediaObj, isCached) => {
+    const responseData = JSON.parse(JSON.stringify(mediaObj));
+    applyLanguagePreference(responseData, lang);
+    return reply.send({ success: true, data: responseData, cached: isCached });
+  };
+
   // 1. URL-key cache hit
-  if (db.data.series[id]) {
-    return reply.send({
-      success: true,
-      data: db.data.series[id],
-      cached: true,
-    });
-  }
+  if (db.data.series[id]) return sendLocalized(db.data.series[id], true);
 
   // 2. Numeric ID scan through metadata cache
   if (isNumeric) {
@@ -323,7 +352,7 @@ fastify.get("/api/series/:id", async (request, reply) => {
     if (hit) {
       db.data.series[id] = hit;
       db.save();
-      return reply.send({ success: true, data: hit, cached: true });
+      return sendLocalized(hit, true);
     }
   }
 
@@ -341,9 +370,7 @@ fastify.get("/api/series/:id", async (request, reply) => {
         (e) => e.status === 429 || String(e.message).includes("rate"),
       );
       return rateLimited
-        ? reply
-            .code(429)
-            .send({ error: "AniList rate limited — try again shortly." })
+        ? reply.code(429).send({ error: "AniList rate limited — try again shortly." })
         : reply.code(404).send({ error: "Series not found on AniList" });
     }
 
@@ -352,20 +379,17 @@ fastify.get("/api/series/:id", async (request, reply) => {
     db.data.metadata[media.title.english || media.title.romaji] = media;
     db.save();
 
-    return reply.send({ success: true, data: media });
+    return sendLocalized(media, false);
   } catch (e) {
     console.error("Series fetch error:", e.message);
-    return reply
-      .code(500)
-      .send({ error: "AniList fetch failed", detail: e.message });
+    return reply.code(500).send({ error: "AniList fetch failed", detail: e.message });
   }
 });
 
 // ── GET /api/extensions ────────────────────────────────────────────────────────
-// Optional ?format=manga|novel to filter by extension format
 fastify.get("/api/extensions", async (request, reply) => {
   const contentType = (request.query.contentType || "sfw").toLowerCase();
-  const format = (request.query.format || "").toLowerCase(); // "manga", "novel", or "" for all
+  const format = (request.query.format || "").toLowerCase();
 
   const exts = global.window.Nexus.extensions
     .filter((ext) => contentType === "nsfw" || ext.type !== "nsfw")
@@ -384,33 +408,25 @@ fastify.get("/api/extensions", async (request, reply) => {
 });
 
 // ── GET /api/series-ext ────────────────────────────────────────────────────────
-// Fetches series metadata from an extension (for non-AniList sources like NovelBin)
-// Returns data in the same shape renderSeries() expects
 fastify.get("/api/series-ext", async (request, reply) => {
   const { id, source } = request.query;
-  if (!id || !source)
-    return reply.code(400).send({ error: "Missing id or source" });
+  const lang = request.query.lang || getAppLanguage();
+
+  if (!id || !source) return reply.code(400).send({ error: "Missing id or source" });
 
   const ext = global.window.Nexus.extensions.find((e) => e.name === source);
-  if (!ext)
-    return reply.code(404).send({ error: `Source "${source}" not found` });
+  if (!ext) return reply.code(404).send({ error: `Source "${source}" not found` });
 
   if (typeof ext.getPostDetails !== "function") {
-    return reply
-      .code(404)
-      .send({ error: `${source} has no getPostDetails method` });
+    return reply.code(404).send({ error: `${source} has no getPostDetails method` });
   }
 
   try {
     const details = await ext.getPostDetails(id);
 
-    // Normalise to the same shape renderSeries() reads from AniList
     const data = {
-      // Identify as extension-sourced so client can skip AniList-only fields
       _source: source,
       _sourceId: id,
-
-      // Title — match AniList shape
       title: {
         english: details.title || id,
         romaji: details.title || id,
@@ -430,41 +446,22 @@ fastify.get("/api/series-ext", async (request, reply) => {
       meanScore: null,
       popularity: null,
       favourites: null,
-      genres: (details.tags || [])
-        .filter((t) => t.type === "genre")
-        .map((t) => t.name),
+      genres: (details.tags || []).filter((t) => t.type === "genre").map((t) => t.name),
       tags: (details.tags || []).map((t) => ({
         name: t.name,
         category: t.type || "genre",
         rank: 80,
         isMediaSpoiler: false,
       })),
-
-      // Cover image — match AniList shape
       coverImage: {
         extraLarge: details.thumb || null,
         large: details.thumb || null,
         color: null,
       },
       bannerImage: details.banner || details.thumb || null,
-
-      // Staff from author field if present
       staff: details.author
-        ? {
-            edges: [
-              {
-                role: "Story",
-                node: {
-                  id: 0,
-                  name: { full: details.author },
-                  image: { medium: null },
-                  siteUrl: null,
-                },
-              },
-            ],
-          }
+        ? { edges: [{ role: "Story", node: { id: 0, name: { full: details.author }, image: { medium: null }, siteUrl: null } }] }
         : { edges: [] },
-
       characters: { edges: [] },
       relations: { edges: [] },
     };
@@ -472,17 +469,14 @@ fastify.get("/api/series-ext", async (request, reply) => {
     return reply.send({ success: true, data });
   } catch (e) {
     console.error("[series-ext] error:", e.message);
-    return reply
-      .code(500)
-      .send({ error: "Extension fetch failed", detail: e.message });
+    return reply.code(500).send({ error: "Extension fetch failed", detail: e.message });
   }
 });
 
 // ── GET /api/chapters ──────────────────────────────────────────────────────────
 fastify.get("/api/chapters", async (request, reply) => {
   const { source, q } = request.query;
-  if (!source || !q)
-    return reply.code(400).send({ error: "Missing source or q" });
+  if (!source || !q) return reply.code(400).send({ error: "Missing source or q" });
 
   const ext = global.window.Nexus.extensions.find((e) => e.name === source);
   if (!ext) {
@@ -498,17 +492,13 @@ fastify.get("/api/chapters", async (request, reply) => {
     const results = searchResult?.results || [];
 
     if (!results.length) {
-      return reply.send({
-        success: true,
-        chapters: [],
-        message: "No results on this source",
-      });
+      return reply.send({ success: true, chapters: [], message: "No results on this source" });
     }
 
     const first = results[0];
-    console.log(`[chapters] matched: "${first.title}" (${first.id})`);
-
     let chapters = [];
+
+    // Extensions will automatically use the global.localStorage to detect language here
     if (typeof ext.getChapters === "function") {
       const r = await ext.getChapters(first.id);
       chapters = r?.chapters || [];
@@ -517,72 +507,45 @@ fastify.get("/api/chapters", async (request, reply) => {
       chapters = r?.chapters || [];
     }
 
-    console.log(`[chapters] ${chapters.length} chapters`);
-    return reply.send({
-      success: true,
-      chapters,
-      mangaId: first.id,
-      title: first.title,
-    });
+    return reply.send({ success: true, chapters, mangaId: first.id, title: first.title });
   } catch (e) {
-    console.error(`[chapters] error:`, e.message);
-    return reply
-      .code(500)
-      .send({ error: "Chapter fetch failed", detail: e.message });
+    return reply.code(500).send({ error: "Chapter fetch failed", detail: e.message });
   }
 });
 
 // ── GET /api/pages ────────────────────────────────────────────────────────────
-// id and source are query params — avoids pipe character issues in path params
 fastify.get("/api/pages", async (request, reply) => {
   const { id: chapterId, source } = request.query;
 
   if (!chapterId) return reply.code(400).send({ error: "Missing id param" });
   if (!source) return reply.code(400).send({ error: "Missing source param" });
+
   const ext = global.window.Nexus.extensions.find((e) => e.name === source);
-  if (!ext)
-    return reply.code(404).send({ error: `Source "${source}" not found` });
+  if (!ext) return reply.code(404).send({ error: `Source "${source}" not found` });
 
   try {
     const extFormat = (ext.format || "manga").toLowerCase();
 
     if (extFormat === "novel") {
-      // Novel extension — use getChapterContent
       if (typeof ext.getChapterContent !== "function") {
-        return reply
-          .code(404)
-          .send({ error: `${source} has no getChapterContent method` });
+        return reply.code(404).send({ error: `${source} has no getChapterContent method` });
       }
       const content = await ext.getChapterContent(chapterId);
-      return reply.send({
-        success: true,
-        type: "novel",
-        content: content || "",
-      });
+      return reply.send({ success: true, type: "novel", content: content || "" });
     } else {
-      // Manga extension — use getChapterPages
       if (typeof ext.getChapterPages !== "function") {
-        return reply
-          .code(404)
-          .send({ error: `${source} has no getChapterPages method` });
+        return reply.code(404).send({ error: `${source} has no getChapterPages method` });
       }
       const pages = await ext.getChapterPages(chapterId);
-      if (!pages?.length)
-        return reply
-          .code(404)
-          .send({ error: "No pages found for this chapter" });
+      if (!pages?.length) return reply.code(404).send({ error: "No pages found for this chapter" });
       return reply.send({ success: true, type: "manga", pages });
     }
   } catch (e) {
-    console.error("[pages] error:", e.message);
-    return reply
-      .code(500)
-      .send({ error: "Page fetch failed", detail: e.message });
+    return reply.code(500).send({ error: "Page fetch failed", detail: e.message });
   }
 });
 
 // ── GET /api/search (SSE) ──────────────────────────────────────────────────────
-// Streams results directly from extensions — no AniList enrichment, instant results.
 fastify.get("/api/search", (request, reply) => {
   const { q, contentType } = request.query;
   const allowNsfw = contentType === "nsfw";
@@ -630,25 +593,29 @@ fastify.get("/api/search", (request, reply) => {
           );
         }
       })
-      .catch((e) => {
-        console.error(`[search] ${ext.name} error:`, e.message);
-      })
+      .catch((e) => console.error(`[search] ${ext.name} error:`, e.message))
       .finally(finish);
   });
 });
 
 // ── GET /api/home ──────────────────────────────────────────────────────────────
-fastify.get("/api/home", async (_req, reply) => {
+fastify.get("/api/home", async (request, reply) => {
+  const lang = request.query.lang || getAppLanguage();
   const FIVE_HOURS = 5 * 60 * 60 * 1000;
+
   if (db.data.home && Date.now() - db.data.homeLastFetch < FIVE_HOURS) {
-    return reply.send({ success: true, data: db.data.home });
+    const clonedHome = JSON.parse(JSON.stringify(db.data.home));
+    clonedHome.trending.forEach(m => applyLanguagePreference(m, lang));
+    clonedHome.popular.forEach(m => applyLanguagePreference(m, lang));
+    clonedHome.favorites.forEach(m => applyLanguagePreference(m, lang));
+    return reply.send({ success: true, data: clonedHome });
   }
 
   const query = `
     query {
-      trending:  Page(page: 1, perPage: 15) { media(type: MANGA, sort: TRENDING_DESC,   isAdult: false) { id title { romaji english } coverImage { extraLarge large } bannerImage description genres } }
-      popular:   Page(page: 1, perPage: 15) { media(type: MANGA, sort: POPULARITY_DESC, isAdult: false) { id title { romaji english } coverImage { large } description genres } }
-      favorites: Page(page: 1, perPage: 15) { media(type: MANGA, sort: FAVOURITES_DESC, isAdult: false) { id title { romaji english } coverImage { large } description genres } }
+      trending:  Page(page: 1, perPage: 15) { media(type: MANGA, sort: TRENDING_DESC,   isAdult: false) { id title { romaji english native } coverImage { extraLarge large } bannerImage description genres } }
+      popular:   Page(page: 1, perPage: 15) { media(type: MANGA, sort: POPULARITY_DESC, isAdult: false) { id title { romaji english native } coverImage { large } description genres } }
+      favorites: Page(page: 1, perPage: 15) { media(type: MANGA, sort: FAVOURITES_DESC, isAdult: false) { id title { romaji english native } coverImage { large } description genres } }
     }`;
 
   try {
@@ -658,6 +625,7 @@ fastify.get("/api/home", async (_req, reply) => {
       body: JSON.stringify({ query }),
     });
     const result = await res.json();
+
     if (result.data) {
       db.data.home = {
         trending: result.data.trending.media,
@@ -666,7 +634,13 @@ fastify.get("/api/home", async (_req, reply) => {
       };
       db.data.homeLastFetch = Date.now();
       db.save();
-      return reply.send({ success: true, data: db.data.home });
+
+      const clonedHome = JSON.parse(JSON.stringify(db.data.home));
+      clonedHome.trending.forEach(m => applyLanguagePreference(m, lang));
+      clonedHome.popular.forEach(m => applyLanguagePreference(m, lang));
+      clonedHome.favorites.forEach(m => applyLanguagePreference(m, lang));
+
+      return reply.send({ success: true, data: clonedHome });
     }
     return reply.send({ success: false, data: null });
   } catch (e) {
@@ -676,34 +650,69 @@ fastify.get("/api/home", async (_req, reply) => {
 });
 
 // ── GET /api/proxy ─────────────────────────────────────────────────────────────
+// ── GET /api/proxy ─────────────────────────────────────────────────────────────
 fastify.get("/api/proxy", async (request, reply) => {
-  const { url, referer } = request.query;
-  if (!url) return reply.code(400).send("No URL provided");
-  try {
-    const headers = {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-    };
-    if (referer) headers["Referer"] = referer;
+  let { url, referer } = request.query;
 
-    const r = await fetch(url, { headers });
+  if (!url) return reply.code(400).send("No URL provided");
+
+  // Fix protocol-relative URLs (e.g., "//static.bunnycdn.ru/...")
+  if (url.startsWith("//")) {
+    url = "https:" + url;
+  }
+
+  try {
+    // Mimic a real browser's image request perfectly
+    const headers = {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Connection": "keep-alive",
+      "Sec-Fetch-Dest": "image",
+      "Sec-Fetch-Mode": "no-cors",
+      "Sec-Fetch-Site": "cross-site",
+    };
+
+    // If we have a referer, inject it AND derive the Origin (MangaFire CDNs strictly check Origin)
+    if (referer) {
+      headers["Referer"] = referer;
+      try {
+        headers["Origin"] = new URL(referer).origin;
+      } catch (e) {}
+    }
+
+    const r = await fetch(url, { headers, method: "GET" });
+
     if (!r.ok) {
-      console.error(`[proxy] ${r.status} for ${url}`);
+      console.error(`[proxy] upstream rejected ${r.status} for ${url}`);
       return reply.code(r.status).send(`Upstream returned ${r.status}`);
     }
+
     const buf = Buffer.from(await r.arrayBuffer());
-    const ct = r.headers.get("content-type") || "image/jpeg";
+
+    // Some manga CDNs return binary streams without a proper content-type.
+    // We guess based on the URL so the browser doesn't refuse to render it.
+    let ct = r.headers.get("content-type");
+    if (!ct || ct.includes("text/") || ct.includes("application/octet-stream")) {
+      const lowerUrl = url.toLowerCase();
+      if (lowerUrl.endsWith(".png")) ct = "image/png";
+      else if (lowerUrl.endsWith(".webp")) ct = "image/webp";
+      else if (lowerUrl.endsWith(".gif")) ct = "image/gif";
+      else ct = "image/jpeg";
+    }
+
     reply.header("Content-Type", ct);
-    reply.header("Cache-Control", "public, max-age=86400");
+    reply.header("Cache-Control", "public, max-age=86400"); // Cache for 24 hours
     reply.header("Access-Control-Allow-Origin", "*");
+
     return reply.send(buf);
   } catch (e) {
     console.error("[proxy] error:", e.message);
-    return reply.code(500).send("Proxy failed");
+    return reply.code(500).send("Proxy failed to fetch image");
   }
 });
 
-// ── Debug (remove once chapters confirmed working) ─────────────────────────────
+// ── GET /api/debug/chapters ───────────────────────────────────────────────────
 fastify.get("/api/debug/chapters", async (request, reply) => {
   const { source = "Comix", q = "blue box" } = request.query;
   const ext = global.window.Nexus.extensions.find((e) => e.name === source);
@@ -734,7 +743,6 @@ fastify.get("/api/debug/chapters", async (request, reply) => {
   }
 });
 
-// Proxy AniList account info from the launcher API
 fastify.get("/api/anilist/me", async (req, reply) => {
   try {
     const res = await fetch("http://localhost:3000/api/v1/anilist/me");

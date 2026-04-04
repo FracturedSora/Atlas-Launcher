@@ -43,4 +43,8 @@ contextBridge.exposeInMainWorld("backendAPI", {
 
   updateLauncher: (downloadUrl, fileName) =>
     ipcRenderer.invoke("launcher-update", { downloadUrl, fileName }),
+
+  getSettings: () => ipcRenderer.invoke("get-settings"),
+
+  updateSettings: (settings) => ipcRenderer.invoke("update-settings", settings),
 });
