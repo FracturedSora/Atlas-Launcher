@@ -37636,63 +37636,30 @@
   "home": {
     "trending": [
       {
-        "id": 163824,
+        "id": 170400,
         "title": {
-          "romaji": "Cheolhyeolgeomga Sanyanggaeui Hoegwi",
-          "english": "Revenge of the Baskerville Bloodhound"
+          "romaji": "Byeoreul Pumeun Swordmaster",
+          "english": "The Stellar Swordmaster",
+          "native": "별을 품은 소드마스터"
         },
         "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx163824-KiablxybJD6i.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx163824-KiablxybJD6i.jpg"
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx170400-yMIuOIboWuoO.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx170400-yMIuOIboWuoO.jpg"
         },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/163824-btjkVMYvTVz4.jpg",
-        "description": "Raised to kill like a pack of loyal hounds, the Baskerville children took countless lives as a band of fearsome assassins. Despite being the shunned illegitimate son of the brood, Vikir served his family faithfully, only to meet his untimely demise at his father’s hands. But when he is inexplicably reborn with a second chance at life, Vikir, armed with the memories and knowledge of his past, swears to rise above the pack and take his revenge. This time, he's ready to bite the hand that feeds.\n<br><br>(Source: Tapas)",
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/170400-EgLAQtqhdQAx.jpg",
+        "description": "The so-called “Lighthouse of the North,” the prosperous trading town of Schoarra, hides a dark underbelly: seedy slums ruled by five ruthless crime bosses. When streetwise orphan Vlad finds the brothel he works for decimated by a disgraced knight, he turns to the path of the blade, pledging himself to the pursuit of power by sword. Blessed with the ability to seek wisdom from his sentient sword, Vlad embarks upon a journey of growth and peril as swordsman in service to the powerful House Vayezid.<br>\n<br>\n(Source: WEBTOON)",
         "genres": [
           "Action",
+          "Adventure",
           "Fantasy"
-        ]
-      },
-      {
-        "id": 172619,
-        "title": {
-          "romaji": "Academy-eseo Saranamgi",
-          "english": "The Extra’s Academy Survival Guide"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx172619-LSoXY45QAas4.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx172619-LSoXY45QAas4.jpg"
-        },
-        "bannerImage": null,
-        "description": "Ed Rothstaylor is a third-rate villain in a game, disowned by his family and kicked out of the dormitory for his misdeeds. One day, our main character wakes up as this very Ed, and realizes he must earn a scholarship so he can graduate and be set for life. Now living in the woods, he resolves to keep away from the protagonists, but four of the female leads just won't leave him alone. Not only that, his presence starts to change the timeline and events of the game! Can Ed help the story progress while staying out of the limelight?<br><br>(Source: WEBTOON)",
-        "genres": [
-          "Action",
-          "Fantasy"
-        ]
-      },
-      {
-        "id": 108556,
-        "title": {
-          "romaji": "SPY×FAMILY",
-          "english": "SPY x FAMILY"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx108556-NHjkz0BNJhLx.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx108556-NHjkz0BNJhLx.jpg"
-        },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/108556-iCiPfU0GU4OM.jpg",
-        "description": "The master spy codenamed &lt;Twilight&gt; has spent his days on undercover missions, all for the dream of a better world. But one day, he receives a particularly difficult new order from command. For his mission, he must form a temporary family and start a new life?! A Spy/Action/Comedy about a one-of-a-kind family!<br><br>\n(Source: MANGA Plus)<br><br>\n<i>Notes:<br>\n- Nominated for the 24th Tezuka Osamu Cultural Prize in 2020.<br>\n- Nominated for the 13th and 14th Manga Taisho Award in 2020 and 2021.<br>\n- Nominated for the 44th Kodansha Manga Award in the Shounen Category in 2020.</i>",
-        "genres": [
-          "Action",
-          "Comedy",
-          "Slice of Life",
-          "Supernatural"
         ]
       },
       {
         "id": 30013,
         "title": {
           "romaji": "ONE PIECE",
-          "english": "One Piece"
+          "english": "One Piece",
+          "native": "ONE PIECE"
         },
         "coverImage": {
           "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-BeslEMqiPhlk.jpg",
@@ -37708,101 +37675,68 @@
         ]
       },
       {
-        "id": 180752,
+        "id": 164222,
         "title": {
-          "romaji": "Madan no Ichi",
-          "english": "Ichi the Witch"
+          "romaji": "Madojeonsaenggi",
+          "english": "Chronicles of the Demon Faction",
+          "native": "마도전생기"
         },
         "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx180752-13CVO310XiEs.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx180752-13CVO310XiEs.jpg"
-        },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/180752-Mt5DCo1mryj8.jpg",
-        "description": "Magic is alive and well in the world, inside beings known as Majiks. By completing a Majik’s trial, a Witch can gain its power. However, only women can become Witches or use magical items. All that changes one day when a young man named Ichi turns the world on its head by defeating an infamous Majik and gaining its magical powers!\n<br><br>\n(Source: VIZ Media)\n<br><br>\n<i>Note:<br>\n- Winner of the Tsugimanga 2025 Award in the Print Manga Category.</i>",
-        "genres": [
-          "Action",
-          "Adventure",
-          "Comedy",
-          "Fantasy"
-        ]
-      },
-      {
-        "id": 169355,
-        "title": {
-          "romaji": "Kagurabachi",
-          "english": "Kagurabachi"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx169355-5pqzh1Wb4NOQ.png",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx169355-5pqzh1Wb4NOQ.png"
-        },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/169355-MzURKZ3veXa7.jpg",
-        "description": "Young Chihiro spends his days training under his famous swordsmith father. One day he hopes to become a great sword-maker himself. The goofy father and the serious son--they thought these days would last forever. But suddenly, tragedy strikes. A dark day soaked in blood. Chihiro and his blade now live only for revenge.\n<br><br>(Source: MANGA Plus)\n<br><br>\n<i>Note:<br>\n- Winner of the Tsugimanga 2024 Award in the Print Manga Category. <br>\n- Winner of the 4th Magademy Commitment Award. <br>\n- Nominee of the 70th Shogakukan Award. </i>",
-        "genres": [
-          "Action",
-          "Drama",
-          "Fantasy"
-        ]
-      },
-      {
-        "id": 125828,
-        "title": {
-          "romaji": "SAKAMOTO DAYS",
-          "english": "Sakamoto Days"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx125828-p78Z8SflkfmO.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx125828-p78Z8SflkfmO.jpg"
-        },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/125828-wnmpFCNg0WkK.jpg",
-        "description": "Taro Sakamoto was the ultimate assassin, feared by villains and admired by hitmen. But one day...he fell in love! Retirement, marriage, fatherhood and then... Sakamoto gained weight! The chubby guy who runs the neighborhood store is actually a former legendary hitman! Can he protect his family from danger? Get ready to experience a new kind of action comedy series!\n<br><br>\n(Source: MANGA Plus)",
-        "genres": [
-          "Action",
-          "Comedy"
-        ]
-      },
-      {
-        "id": 153284,
-        "title": {
-          "romaji": "Man Nyeon Mane Gwihwanhan Player",
-          "english": "After Ten Millennia in Hell"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx153284-roAlRmlRM7Vs.png",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx153284-roAlRmlRM7Vs.png"
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx164222-9wzDZENmjYtc.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx164222-9wzDZENmjYtc.jpg"
         },
         "bannerImage": null,
-        "description": "Oh Kangwoo the Demon King has had it with ruling over Hell and wants to return to Earth. But when he finally gets there, not only are his powers sealed, but the Earth he once knew has turned into an MMORPG free-for-all. Dimensional gates have appeared all over the world, and \"players\" enter them to make a living by hunting monsters. If Kangwoo wants to survive in this dangerous game, he's going to have to level up, and fast. But for this demon king, hell on earth might be worse than Hell itself! <br><br>(Source: Tapas)",
+        "description": "Tired of the yoke of the Divine Justice Alliance, master assassin Cheon Ha-Jin attempts to flee, only to be confronted by martial artists of all allegiances, both orthodox and deviant. Succumbing to the wounds of his ferocious struggle for freedom, he awakens in the body of Seo Ryang, a prince of the notorious Heavenly Demon Cult who suffers from a disorder that prohibits him from the use of qi. In order to survive in his new life, Ha-Jin must contend with the many dangers and enemies that lurk within the cult.<br><br>(Source: WEBTOON, edited)",
         "genres": [
           "Action",
-          "Adventure",
           "Fantasy"
         ]
       },
       {
-        "id": 132182,
+        "id": 106929,
         "title": {
-          "romaji": "Ao no Hako",
-          "english": "Blue Box"
+          "romaji": "Eleceed",
+          "english": "Eleceed",
+          "native": "일렉시드"
         },
         "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132182-maXh2QzYPrqR.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx132182-maXh2QzYPrqR.jpg"
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx106929-flAUvHZDUz5v.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx106929-flAUvHZDUz5v.jpg"
         },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/132182-1jdVSMx8ShXd.jpg",
-        "description": "Taiki Inomata is on the boys' badminton team at sports powerhouse Eimei Junior and Senior High. He's in love with basketball player Chinatsu Kano, the older girl he trains alongside every morning in the gym. One Spring day, their relationship takes a sharp turn ... And thus begins this brand-new series of love, sports and youth!<br><br>(Source: MANGA Plus)",
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/106929-jYmT1n3Z0m46.jpg",
+        "description": "Jiwoo is a kind-hearted young man who harnesses the lightning quick reflexes of a cat to secretly make the world a better place – one saved little child or foster pet at a time. Kayden is a secret agent on the run, who finds himself stuck in the body of a…um…decidedly fat old fluffy cat. Together, armed with Jiwoo’s super powers and Kayden’s uber-smarts, they’re out to fight those forces who would let evil rule this world. That is, if they can stand each other long enough to get the job done.\n<br><br>(Source: WEBTOONS)",
         "genres": [
+          "Action",
+          "Comedy",
+          "Supernatural"
+        ]
+      },
+      {
+        "id": 159930,
+        "title": {
+          "romaji": "Muhanui Mabeopsa",
+          "english": "The Infinite Mage",
+          "native": "무한의 마법사"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx159930-qK1P4BNQL0zG.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx159930-qK1P4BNQL0zG.jpg"
+        },
+        "bannerImage": null,
+        "description": "After Sirone was abandoned in a stable, he was found by a family of hunters and raised in a loving home. Despite the hardships of the peasant life, he learned how to read from a young age and became obsessed with books, especially ones on the history of magic. One day, he has an unlikely encounter with a mage and learns how to enter the \"spirit zone,\" the first step to learning how to use magic. Although they say only nobles can be mages, will Sirone be able to prove his infinite potential?\n<br><br>\n(Source: Tapas)",
+        "genres": [
+          "Action",
+          "Adventure",
           "Drama",
-          "Romance",
-          "Slice of Life",
-          "Sports"
+          "Fantasy"
         ]
       },
       {
         "id": 105778,
         "title": {
           "romaji": "Chainsaw Man",
-          "english": "Chainsaw Man"
+          "english": "Chainsaw Man",
+          "native": "チェンソーマン"
         },
         "coverImage": {
           "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx105778-euxXZEIfDY2u.png",
@@ -37819,10 +37753,106 @@
         ]
       },
       {
+        "id": 106758,
+        "title": {
+          "romaji": "Kage no Jitsuryokusha ni Naritakute!",
+          "english": "The Eminence in Shadow",
+          "native": "陰の実力者になりたくて！"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx106758-jtXpQYQqyNJv.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx106758-jtXpQYQqyNJv.jpg"
+        },
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/106758-IWiib0G2AJdg.jpg",
+        "description": "One big fat lie and a few twisted truths.\n<br><br>\nEven in his past life, Cid's dream wasn't to become a protagonist or a final boss. He'd rather lie low as a minor character until it's prime time to reveal he's a mastermind...or at least, do the next best thing-pretend to be one! And now that he's been reborn into another world, he's ready to set the perfect conditions to live out his dreams to the fullest. Armed with his overactive imagination, Cid jokingly recruits members to his organization and makes up a whole backstory about an evil cult that they need to take down. Well, as luck would have it, these imaginary adversaries turn out to be the real deal-and everyone knows the truth but him!\n<br><br>\n(Source: Yen Press)",
+        "genres": [
+          "Action",
+          "Comedy",
+          "Fantasy"
+        ]
+      },
+      {
+        "id": 106130,
+        "title": {
+          "romaji": "Blue Lock",
+          "english": "Blue Lock",
+          "native": "ブルーロック"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx106130-yPNeuSu75ey1.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx106130-yPNeuSu75ey1.jpg"
+        },
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/106130-4UbnMTU80zur.jpg",
+        "description": "After a disastrous defeat at the 2018 World Cup, Japan's team struggles to regroup. But what's missing? An absolute Ace Striker, who can guide them to the win. The Japan Football Union is hell-bent on creating a striker who hungers for goals and thirsts for victory, and who can be the decisive instrument in turning around a losing match...and to do so, they've gathered 300 of Japan's best and brightest youth players. Who will emerge to lead the team...and will they be able to out-muscle and out-ego everyone who stands in their way?\n<br><br>\n(Source: Kodansha USA)\n<br><br>\n<i>Note: Winner of the 45th Kodansha Manga Award in the Shounen Category in 2021.</i>",
+        "genres": [
+          "Action",
+          "Drama",
+          "Sports"
+        ]
+      },
+      {
+        "id": 178379,
+        "title": {
+          "romaji": "Mabeop Hakgyo Apjeommyeol Cheonjae-ga Doeeotda",
+          "english": "Blink Master of the Magic Academy",
+          "native": "마법학교 앞점멸 천재가 되었다"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx178379-dokda9kEw3Ns.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx178379-dokda9kEw3Ns.jpg"
+        },
+        "bannerImage": null,
+        "description": "In the game Aether World, Baek Yuseol is considered the most useless character because he can't use magic like everyone else. His only skill, Blink, is a short-range teleportation ability most players consider worthless. But when he’s tasked with reaching the game's true ending, Baek Yuseol decides to use his unconventional skill to achieve this impossible goal. Can this so-called \"trash\" character outsmart his powerful peers, form unlikely alliances, and ultimately master the game?<br><br>(Source: Tapas)",
+        "genres": [
+          "Action",
+          "Adventure",
+          "Fantasy"
+        ]
+      },
+      {
+        "id": 182066,
+        "title": {
+          "romaji": "Hoegwihan Yongbyeongeun Da Gyehoegi Itda",
+          "english": "The Regressed Mercenary Has a Plan",
+          "native": "회귀한 용병은 다 계획이 있다"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx182066-kqOV7WW1DAH4.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx182066-kqOV7WW1DAH4.jpg"
+        },
+        "bannerImage": null,
+        "description": "Cecil Perdium, the Mercenary King, was killed in battle before he could avenge his family. As he faces death, he learns that Duke Delphine, the man who caused the downfall of his family, didn't work alone. Suddenly waking up as his teenage self, Cecil must work to both overcome his poor reputation and build up his strength to save his family. With their soldiers and knights defecting due to the harsh conditions they must endure, he has his work cut out for him. Can Cecil become the mighty warrior he once was and avert his family's fate?\n<br><br>\n(Source: WEBTOON)",
+        "genres": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "id": 113501,
+        "title": {
+          "romaji": "Kaette Kudasai! Akutsu-san",
+          "english": "Please Go Home, Miss Akutsu!",
+          "native": "帰ってください! 阿久津さん"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx113501-rVSt4fVTEAy2.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx113501-rVSt4fVTEAy2.jpg"
+        },
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/113501-rKF3vGYKLLhE.jpg",
+        "description": "Timid Ooyama keeps to himself at school, and he certainly never gets involved with Akutsu Riko, a delinquent as buxom as she is notorious. But when she turns up at his apartment out of the blue, what’s he supposed to do, kick her out? She’s gorgeous! And scary! But things get complicated when Akutsu asks to stay the night, then starts turning up over and over again after school–reading Ooyama’s manga, sprawling out on his bed, and digging up his smut stash. Why exactly is she claiming his life as her hangout?! She makes it clear there’s no way she could possibly like him, but the teasing threatens to boil over into something more in this sexy yet adorable slice-of-life rom-com!\n<br><br>\n(Source: Seven Seas Entertainment)",
+        "genres": [
+          "Comedy",
+          "Ecchi",
+          "Romance",
+          "Slice of Life"
+        ]
+      },
+      {
         "id": 137714,
         "title": {
           "romaji": "Jirai nan desu ka? Chihara-san",
-          "english": "Are You a Landmine, Chihara-san?"
+          "english": "Are You a Landmine, Chihara-san?",
+          "native": "地雷なんですか？地原さん"
         },
         "coverImage": {
           "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx137714-L9dXZ1uhfVBz.jpg",
@@ -37837,72 +37867,63 @@
         ]
       },
       {
-        "id": 177706,
+        "id": 174515,
         "title": {
-          "romaji": "Oneulman Saneun Gisa",
-          "english": "The Knight Only Lives Today"
+          "romaji": "Seulgiroun Munmyeongsaenghwal",
+          "english": "Nebula's Civilization",
+          "native": "슬기로운 문명생활"
         },
         "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx177706-3r8dnAr8Prjq.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx177706-3r8dnAr8Prjq.jpg"
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx174515-Ujnhdtynaedo.png",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx174515-Ujnhdtynaedo.png"
         },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/177706-Hss6QY0ZfzVf.jpg",
-        "description": "Is dying repeatedly a blessing? Enkrid's life-long dream of becoming a knight looked to be forever out of reach, until one day he died... and woke up at the beginning of that same day! Now that he has unlimited chances to train and engage in mortal combat, just how far can he go?<br><br>(Source: WEBTOON)",
+        "bannerImage": null,
+        "description": "Seong-Un Choi is the top-ranked player in the game \"Lost World,\" being the only player to have completed all its achievements. However, his triumph is short-lived as a mysterious message transports him to the real \"Lost World,\" transforming him from a mere gamer to a contender for godhood. Amidst others vying for divinity, will Seong-Un be able to achieve true godhood and reign supreme in this new realm?<br><br>(Source: WEBTOON)",
         "genres": [
-          "Action",
+          "Adventure",
           "Fantasy"
         ]
       },
       {
-        "id": 187944,
+        "id": 132029,
         "title": {
-          "romaji": "Nae Choeaeneun Makchareul Tanda",
-          "english": "My Bias Gets on the Last Train"
+          "romaji": "Dandadan",
+          "english": "Dandadan",
+          "native": "ダンダダン"
         },
         "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx187944-gzNbL7zeY7Ma.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx187944-gzNbL7zeY7Ma.jpg"
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-prGF4gePdSKv.jpg",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx132029-prGF4gePdSKv.jpg"
         },
-        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/187944-G78YqHH7LkrR.jpg",
-        "description": "Every night, Yeo-Un takes the last train home—same route, same time, same routine. But one thing keeps catching his eye: a girl with a guitar and a presence that lingers in his mind. When a shared love for the indie band Long Afternoon sparks a conversation, their late-night encounters begin to turn into something more. But Hae-In isn’t just another fan—she’s the voice behind the band, a secret she can’t afford to reveal. As music draws them closer, the truth may threaten to pull them apart. When the final note plays, will their story end in harmony… or heartbreak?<br><br>(Source: WEBTOON)",
-        "genres": [
-          "Drama",
-          "Romance"
-        ]
-      },
-      {
-        "id": 184502,
-        "title": {
-          "romaji": "Sashimi Han Jaruro Academy-reul Ssipeomeokeum",
-          "english": "The Academy’s Sashimi Sword Master"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx184502-uu4QoBUwEfNH.jpg",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx184502-uu4QoBUwEfNH.jpg"
-        },
-        "bannerImage": null,
-        "description": "Chef Kim, Korea's legendary sashimi master, is transported into the world of Blessing M, a mobile game he once played. But instead of being a hero, he finds himself as Geomma Kang, a mere background extra. Forced into a new life, Geomma discovers a new power: the Blessing of the Blade God. Now, to survive in this game-like world, he must slice through challenges and enemies alike. Will his unmatched skills in the kitchen be enough to carve out a new destiny?\n<br><br>\n(Source: WEBTOON)",
+        "bannerImage": "https://s4.anilist.co/file/anilistcdn/media/manga/banner/132029-V1x9JAh3G8QK.jpg",
+        "description": "Momo Ayase strikes up an unusual friendship with her school’s UFO fanatic, whom she nicknames “Okarun” because he has a name that is not to be said aloud. While Momo believes in spirits, she thinks aliens are nothing but nonsense. Her new friend, meanwhile, thinks the exact opposite. To settle matters, the two set out to prove each other wrong—Momo to a UFO hotspot and Okarun to a haunted tunnel! What unfolds next is a beautiful story of young love…and oddly horny aliens and spirits?\n<br><br>\n(Source: VIZ Media) \n<br><br>\n<i>Note: Nominated for the 15th Manga Taisho Award in 2022.</i>",
         "genres": [
           "Action",
-          "Fantasy"
-        ]
-      },
-      {
-        "id": 177096,
-        "title": {
-          "romaji": "Tonari no Seki no Yatsu ga Souiu Me de Mitekuru",
-          "english": "The Mortifying Ordeal of Being Seen"
-        },
-        "coverImage": {
-          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx177096-C1K0hAL8p1w9.png",
-          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx177096-C1K0hAL8p1w9.png"
-        },
-        "bannerImage": null,
-        "description": "Being sexy can be mortifying, so who will be the first to tap out in this battle of flirtatious gazes between smitten seatmates Eguchi and Ikezawa?\n<BR><BR>\n(Source: VIZ Media)\n<BR><BR>\n<i>Note: Originally self-published, the manga got licensed by Shogakukan and started being published on Sunday Webry since June 17th, 2024. The original first chapter was republished with some changes, the subsequent chapters are being published without changes.</i>",
-        "genres": [
           "Comedy",
-          "Ecchi",
-          "Romance"
+          "Drama",
+          "Romance",
+          "Sci-Fi",
+          "Supernatural"
+        ]
+      },
+      {
+        "id": 176812,
+        "title": {
+          "romaji": "Gwonwangjeonsaeng",
+          "english": "The Reincarnated King of Fists",
+          "native": "권왕전생"
+        },
+        "coverImage": {
+          "extraLarge": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx176812-fXxJHqdO5Koo.png",
+          "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx176812-fXxJHqdO5Koo.png"
+        },
+        "bannerImage": null,
+        "description": "In a world where humans enslave non-human species, the powerful wizard Leppenhardt creates an empire to safeguard these beings. However, his reign ends when he's defeated by the brutally strong Tesron, the \"King of Fists.\" But death isn’t the end, because Leppenhardt awakens in Tesron's young body! Now armed with incredible strength and a new identity, he sets off to free the non-human races again. Can the new King of Fists reshape the world for all, or will his second chance slip away?\n<br><br>\n(Source: Tapas)\n",
+        "genres": [
+          "Action",
+          "Adventure",
+          "Drama",
+          "Fantasy"
         ]
       }
     ],
@@ -37911,7 +37932,8 @@
         "id": 105778,
         "title": {
           "romaji": "Chainsaw Man",
-          "english": "Chainsaw Man"
+          "english": "Chainsaw Man",
+          "native": "チェンソーマン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105778-euxXZEIfDY2u.png"
@@ -37929,7 +37951,8 @@
         "id": 105398,
         "title": {
           "romaji": "Na Honjaman Level Up",
-          "english": "Solo Leveling"
+          "english": "Solo Leveling",
+          "native": "나 혼자만 레벨업"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105398-b673Vt5ZSuz3.jpg"
@@ -37945,7 +37968,8 @@
         "id": 101517,
         "title": {
           "romaji": "Jujutsu Kaisen",
-          "english": "Jujutsu Kaisen"
+          "english": "Jujutsu Kaisen",
+          "native": "呪術廻戦"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx101517-H3TdM3g5ZUe9.jpg"
@@ -37961,7 +37985,8 @@
         "id": 30002,
         "title": {
           "romaji": "Berserk",
-          "english": "Berserk"
+          "english": "Berserk",
+          "native": "ベルセルク"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30002-Cul4OeN7bYtn.jpg"
@@ -37980,7 +38005,8 @@
         "id": 53390,
         "title": {
           "romaji": "Shingeki no Kyojin",
-          "english": "Attack on Titan"
+          "english": "Attack on Titan",
+          "native": "進撃の巨人"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx53390-1RsuABC34P9D.jpg"
@@ -37997,7 +38023,8 @@
         "id": 30013,
         "title": {
           "romaji": "ONE PIECE",
-          "english": "One Piece"
+          "english": "One Piece",
+          "native": "ONE PIECE"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30013-BeslEMqiPhlk.jpg"
@@ -38014,7 +38041,8 @@
         "id": 87216,
         "title": {
           "romaji": "Kimetsu no Yaiba",
-          "english": "Demon Slayer: Kimetsu no Yaiba"
+          "english": "Demon Slayer: Kimetsu no Yaiba",
+          "native": "鬼滅の刃"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx87216-c9bSNVD10UuD.png"
@@ -38031,7 +38059,8 @@
         "id": 63327,
         "title": {
           "romaji": "Tokyo Ghoul",
-          "english": "Tokyo Ghoul"
+          "english": "Tokyo Ghoul",
+          "native": "東京喰種 トーキョーグール"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx63327-glC9cDxYBja9.png"
@@ -38049,7 +38078,8 @@
         "id": 34632,
         "title": {
           "romaji": "Oyasumi Punpun",
-          "english": "Goodnight Punpun"
+          "english": "Goodnight Punpun",
+          "native": "おやすみプンプン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx34632-5xMDkx3pXsEh.png"
@@ -38065,7 +38095,8 @@
         "id": 85486,
         "title": {
           "romaji": "Boku no Hero Academia",
-          "english": "My Hero Academia"
+          "english": "My Hero Academia",
+          "native": "僕のヒーローアカデミア"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx85486-INqnYx8gL3eX.jpg"
@@ -38083,7 +38114,8 @@
         "id": 74347,
         "title": {
           "romaji": "One Punch-Man",
-          "english": "One-Punch Man"
+          "english": "One-Punch Man",
+          "native": "ワンパンマン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx74347-sZpmNJ5xLwRK.jpg"
@@ -38100,7 +38132,8 @@
         "id": 108556,
         "title": {
           "romaji": "SPY×FAMILY",
-          "english": "SPY x FAMILY"
+          "english": "SPY x FAMILY",
+          "native": "SPY×FAMILY"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx108556-NHjkz0BNJhLx.jpg"
@@ -38117,7 +38150,8 @@
         "id": 30656,
         "title": {
           "romaji": "Vagabond",
-          "english": "Vagabond"
+          "english": "Vagabond",
+          "native": "バガボンド"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30656-9mW113O7rDnA.png"
@@ -38133,7 +38167,8 @@
         "id": 30642,
         "title": {
           "romaji": "Vinland Saga",
-          "english": "Vinland Saga"
+          "english": "Vinland Saga",
+          "native": "ヴィンランド・サガ"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30642-0mjRDkf4THpo.jpg"
@@ -38149,7 +38184,8 @@
         "id": 87423,
         "title": {
           "romaji": "Yakusoku no Neverland",
-          "english": "The Promised Neverland"
+          "english": "The Promised Neverland",
+          "native": "約束のネバーランド"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx87423-gPNtu8QbGped.jpg"
@@ -38170,7 +38206,8 @@
         "id": 105778,
         "title": {
           "romaji": "Chainsaw Man",
-          "english": "Chainsaw Man"
+          "english": "Chainsaw Man",
+          "native": "チェンソーマン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105778-euxXZEIfDY2u.png"
@@ -38188,7 +38225,8 @@
         "id": 30013,
         "title": {
           "romaji": "ONE PIECE",
-          "english": "One Piece"
+          "english": "One Piece",
+          "native": "ONE PIECE"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30013-BeslEMqiPhlk.jpg"
@@ -38205,7 +38243,8 @@
         "id": 30002,
         "title": {
           "romaji": "Berserk",
-          "english": "Berserk"
+          "english": "Berserk",
+          "native": "ベルセルク"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30002-Cul4OeN7bYtn.jpg"
@@ -38224,7 +38263,8 @@
         "id": 105398,
         "title": {
           "romaji": "Na Honjaman Level Up",
-          "english": "Solo Leveling"
+          "english": "Solo Leveling",
+          "native": "나 혼자만 레벨업"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx105398-b673Vt5ZSuz3.jpg"
@@ -38240,7 +38280,8 @@
         "id": 53390,
         "title": {
           "romaji": "Shingeki no Kyojin",
-          "english": "Attack on Titan"
+          "english": "Attack on Titan",
+          "native": "進撃の巨人"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx53390-1RsuABC34P9D.jpg"
@@ -38257,7 +38298,8 @@
         "id": 101517,
         "title": {
           "romaji": "Jujutsu Kaisen",
-          "english": "Jujutsu Kaisen"
+          "english": "Jujutsu Kaisen",
+          "native": "呪術廻戦"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx101517-H3TdM3g5ZUe9.jpg"
@@ -38273,7 +38315,8 @@
         "id": 34632,
         "title": {
           "romaji": "Oyasumi Punpun",
-          "english": "Goodnight Punpun"
+          "english": "Goodnight Punpun",
+          "native": "おやすみプンプン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx34632-5xMDkx3pXsEh.png"
@@ -38289,7 +38332,8 @@
         "id": 31706,
         "title": {
           "romaji": "JoJo no Kimyou na Bouken: Steel Ball Run",
-          "english": "JoJo's Bizarre Adventure: Part 7–Steel Ball Run"
+          "english": "JoJo's Bizarre Adventure: Part 7–Steel Ball Run",
+          "native": "ジョジョの奇妙な冒険 スティール・ボール・ラン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx31706-lRncu9VbcBB7.png"
@@ -38307,7 +38351,8 @@
         "id": 30656,
         "title": {
           "romaji": "Vagabond",
-          "english": "Vagabond"
+          "english": "Vagabond",
+          "native": "バガボンド"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30656-9mW113O7rDnA.png"
@@ -38323,7 +38368,8 @@
         "id": 30642,
         "title": {
           "romaji": "Vinland Saga",
-          "english": "Vinland Saga"
+          "english": "Vinland Saga",
+          "native": "ヴィンランド・サガ"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx30642-0mjRDkf4THpo.jpg"
@@ -38339,7 +38385,8 @@
         "id": 63327,
         "title": {
           "romaji": "Tokyo Ghoul",
-          "english": "Tokyo Ghoul"
+          "english": "Tokyo Ghoul",
+          "native": "東京喰種 トーキョーグール"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx63327-glC9cDxYBja9.png"
@@ -38357,7 +38404,8 @@
         "id": 87216,
         "title": {
           "romaji": "Kimetsu no Yaiba",
-          "english": "Demon Slayer: Kimetsu no Yaiba"
+          "english": "Demon Slayer: Kimetsu no Yaiba",
+          "native": "鬼滅の刃"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx87216-c9bSNVD10UuD.png"
@@ -38374,7 +38422,8 @@
         "id": 74347,
         "title": {
           "romaji": "One Punch-Man",
-          "english": "One-Punch Man"
+          "english": "One-Punch Man",
+          "native": "ワンパンマン"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx74347-sZpmNJ5xLwRK.jpg"
@@ -38391,7 +38440,8 @@
         "id": 86635,
         "title": {
           "romaji": "Kaguya-sama wa Kokurasetai: Tensaitachi no Renai Zunousen",
-          "english": "Kaguya-sama: Love is War"
+          "english": "Kaguya-sama: Love is War",
+          "native": "かぐや様は告らせたい～天才たちの恋愛頭脳戦～"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx86635-EdaLQmsn86Fy.png"
@@ -38408,7 +38458,8 @@
         "id": 119257,
         "title": {
           "romaji": "Jeonjijeok Dokja Sijeom",
-          "english": "Omniscient Reader"
+          "english": "Omniscient Reader",
+          "native": "전지적 독자 시점"
         },
         "coverImage": {
           "large": "https://s4.anilist.co/file/anilistcdn/media/manga/cover/medium/bx119257-Pi21aq3ey9GG.jpg"
@@ -38422,5 +38473,5 @@
       }
     ]
   },
-  "homeLastFetch": 1774844970921
+  "homeLastFetch": 1775330568914
 }
