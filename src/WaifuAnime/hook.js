@@ -1,59 +1,54 @@
-// src/WaifuAnime/hook.js
-// ─────────────────────────────────────────────────────────────────────────────
-// Manages the WaifuAnime server as a forked child process.
-// Drop this file into src/WaifuAnime/ alongside server.js.
-// ─────────────────────────────────────────────────────────────────────────────
-
-const { fork }  = require("child_process");
-const path      = require("path");
+const { fork } = require("child_process");
+const path = require("path");
 
 const WAIFU_PORT = process.env.WAIFU_PORT || 3002;
-
 let proc = null;
 
-/**
- * Forks src/WaifuAnime/server.js and pipes its stdio to the parent console.
- * Returns immediately — does NOT block app startup.
- */
- function start() {
-   if (proc && !proc.killed) return;
+function start() {
+  if (proc && !proc.killed) return;
 
-   // 1. DETERMINE THE CORRECT PATH
-   // In an EXE, we use process.argv[0] (the node binary/exe itself)
-   // In dev, we use the actual server.js file
-   const isExe = process.pkg ? true : false;
+  // 1. PATH RESOLUTION
+  // We check if we are running inside an Electron ASAR environment
+  let serverPath = path.join(__dirname, "server.js");
 
-   const serverPath = isExe
-     ? path.join(__dirname, "server.js") // pkg maps this internally
-     : path.join(__dirname, "server.js");
+  // If the path contains 'app.asar', it means we are in the production EXE.
+  // We need to redirect to 'app.asar.unpacked' so the fork can actually access the files.
+  if (serverPath.includes('app.asar') && !serverPath.includes('app.asar.unpacked')) {
+    serverPath = serverPath.replace('app.asar', 'app.asar.unpacked');
+  }
 
-   // 2. FORK LOGIC
-   // If it's an EXE, some bundlers require you to fork the EXE itself
-   // with a specific flag, but usually, pointing to the internal path works
-   proc = fork(serverPath, [], {
-     cwd: process.cwd(), // Use current working directory of the user
-     env: { ...process.env, PORT: String(WAIFU_PORT) },
-     stdio: "pipe",
-   });
+  // 2. FORK LOGIC
+  // We explicitly point to the Electron binary to ensure the child process
+  // has the same environment/Node version as the parent.
+  proc = fork(serverPath, [], {
+    cwd: path.dirname(serverPath), // Set CWD to the actual folder containing the server
+    env: {
+      ...process.env,
+      PORT: String(WAIFU_PORT),
+      ELECTRON_RUN_AS_NODE: "1" // Tells Electron to act like a normal Node.js process
+    },
+    stdio: "pipe",
+  });
 
-   proc.stdout?.on("data", d => console.log("[WaifuAnime]", d.toString().trim()));
-   proc.stderr?.on("data", d => console.error("[WaifuAnime]", d.toString().trim()));
+  proc.stdout?.on("data", d => console.log("[WaifuAnime]", d.toString().trim()));
+  proc.stderr?.on("data", d => console.error("[WaifuAnime]", d.toString().trim()));
 
-   proc.on("error", e => {
-     // If it still fails, it's because the EXE didn't bundle server.js
-     console.error("[WaifuAnime] Process error:", e.message);
-     if (e.code === 'ENOENT') {
-        console.error("HELP: Make sure server.js is included in your build assets!");
-     }
-   });
+  proc.on("error", e => {
+    console.error("[WaifuAnime] Process error:", e.message);
+    if (e.code === 'ENOENT') {
+       console.error(`[WaifuAnime] FAILED TO FIND: ${serverPath}`);
+    }
+  });
 
-   proc.on("exit", (code, sig) => {
-     console.log(`[WaifuAnime] Exited — code=${code} signal=${sig}`);
-     proc = null;
-   });
+  proc.on("exit", (code, sig) => {
+    console.log(`[WaifuAnime] Exited — code=${code} signal=${sig}`);
+    proc = null;
+  });
 
-   console.log(`[WaifuAnime] Server started on port ${WAIFU_PORT} (pid ${proc.pid})`);
- }
+  if (proc.pid) {
+    console.log(`[WaifuAnime] Server started on port ${WAIFU_PORT} (pid ${proc.pid})`);
+  }
+}
 
 /** Gracefully kills the child process. */
 function stop() {
